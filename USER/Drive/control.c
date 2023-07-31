@@ -1,4 +1,4 @@
-﻿#include "delay.h"
+#include "delay.h"
 #include "usart.h"
 #include "motor.h"
 #include "encoder.h"
@@ -9,6 +9,7 @@
 #include "key.h"
 #include "buzz.h"
 #include "oled.h"
+#include "servos.h"
 #include "ultrasound.h"
 #include "graysensor.h"
 #include "mpu6050.h"
@@ -19,15 +20,26 @@
 /********************************************************************
  * 控制均在中断里完成，使用TIM9作为定时中断
 ********************************************************************/
-//PID控制
-PID_TypeDef PID_Left,PID_Right;
+//PID控制，左电机PID、右电机PID、巡线PID、舵机1PID、舵机2PID
+PID_TypeDef PID_Left,PID_Right,PID_LinePatrol,PID_Servos1,PID_Servos2;
 
+/*****************数据采集*****************/
 //通过编码器获取的速度
 int16_t Left_Wheel_speed,Right_Wheel_speed;
-int32_t Left_Wheel_PWM,Right_Wheel_PWM;
-
+//OpenMV传来的数据
+uint16_t Object_Center_X,Object_Center_Y;	//使用OpenMV控制云台接收的数据
+uint16_t Angle_Left,Angle_Right;			//使用OpenMV巡线接收的数据
 //MPU6050获取的值
 float Pitch,Roll,Yaw;		//角度
+short gyrox,gyroy,gyroz;	//角速度
+short aacx,aacy,aacz;		//加速度
+/*****************控制量*****************/
+//控速
+int32_t Left_Wheel_PWM,Right_Wheel_PWM;
+//巡线(OpenMV巡线或灰度巡线PID计算结果)
+float LinePatrol_Control;
+//物体追踪得到的舵机角度
+float Top_Track_Angle,End_Track_Angle;
 
 /*****
  * 入口参数：
@@ -82,6 +94,13 @@ void TIM1_BRK_TIM9_IRQHandler(void)
         PWM_Limit(&Left_Wheel_PWM,&Right_Wheel_PWM);
         Load_PWM(Left_Wheel_PWM,Right_Wheel_PWM);
 		/**********************云台追踪*********************/
+		/*1.将获取到的物体的X、Y坐标进行PID解算*/
+		//X坐标用于控制底部的舵机
+		Top_Track_Angle = Incremental_PID_Contorl(&PID_Servos1,Object_Center_X);
+		//Y坐标用于控制顶部的舵机
+		End_Track_Angle = Incremental_PID_Contorl(&PID_Servos2,Object_Center_Y);
+		/*2.角度输出*/
+		gimbal_angle(Top_Track_Angle,End_Track_Angle);
     }
     TIM_ClearFlag(TIM9,TIM_IT_Update);
 	GraySensor_LinePatrol();
@@ -117,6 +136,8 @@ void USART1_IRQHandler(void)
 		{
 			state = 1;
 			data_cnt=0;
+			Object_Center_X = RxBuffer[1];
+			Object_Center_Y = RxBuffer[2];
 		}
 	}
 }

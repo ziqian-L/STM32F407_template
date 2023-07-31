@@ -1,4 +1,4 @@
-﻿#ifndef __PID_H
+#ifndef __PID_H
 #define __PID_H
 
 #include "sys.h"
@@ -15,7 +15,7 @@ typedef struct
     float LsatError; // 最后的偏差
 } PID_TypeDef;
 
-extern PID_TypeDef PID_Left,PID_Right;
+extern PID_TypeDef PID_Left,PID_Right,PID_LinePatrol,PID_Servos1,PID_Servos2;
 
 float Positional_PID_Contorl(PID_TypeDef *PID,float current_value);
 float Incremental_PID_Contorl(PID_TypeDef *PID,float current_value);

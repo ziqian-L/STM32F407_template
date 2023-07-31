@@ -1,4 +1,4 @@
-﻿#include "delay.h"
+#include "delay.h"
 #include "usart.h"
 #include "motor.h"
 #include "encoder.h"
@@ -40,7 +40,6 @@
 int main(void)
 {
 	static uint8_t status=0;
-	uint8_t i,j;
 	/*系统初始化*/
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//中断优先级分组
     delay_init(168);//延时初始化

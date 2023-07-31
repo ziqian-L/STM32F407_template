@@ -1,4 +1,4 @@
-﻿#include "pid.h"
+#include "pid.h"
 
 /////////////////////////////////////////////位置式PID/////////////////////////////////////////////
 /****
@@ -51,13 +51,27 @@ void PID_Encoders_SetPoint(float Left_Wheel_speed, float Right_Wheel_speed)
 /*******************************************PID参数初始化*******************************************/
 void PID_Init(void)
 {
-
     //电机A、B编码器控速PID
     PID_Left.Kp = PID_Right.Kp = -600;
     PID_Left.Ki = PID_Right.Ki = -3;
     PID_Left.Kd = PID_Right.Kd = -30;
     //编码器A、B的目标速度为0
     PID_Encoders_SetPoint(0,0);
+	//巡线PID控制
+	PID_LinePatrol.SetPoint = 90;
+	PID_LinePatrol.Kp = 0.0;
+	PID_LinePatrol.Ki = 0.0;
+	PID_LinePatrol.Kd = 0.0;
+	//舵机1PID控制
+	PID_Servos1.SetPoint = 90;
+	PID_Servos1.Kp = 0.0;
+	PID_Servos1.Ki = 0.0;
+	PID_Servos1.Kd = 0.0;
+	//舵机2PID控制
+	PID_Servos2.SetPoint = 90;
+	PID_Servos2.Kp = 0.0;
+	PID_Servos2.Ki = 0.0;
+	PID_Servos2.Kd = 0.0;
 }
 void PID_Release(void)
 {
