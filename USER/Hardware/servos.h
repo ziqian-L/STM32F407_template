@@ -1,18 +1,18 @@
-#ifndef __SERVOS_H
+ï»¿#ifndef __SERVOS_H
 #define __SERVOS_H
 
 #include "sys.h"
 
-//¶æ»ú½á¹¹Ìå
+//èˆµæœºç»“æ„ä½“
 typedef struct{
-	uint8_t TIM_CH;			//¶¨Ê±Æ÷Í¨µÀ
-	uint16_t PWM_Limit_Min;	//¶æ»ú×îĞ¡PWMÖµ
-	uint16_t PWM_Limit_Max;	//¶æ»ú×î´óPWMÖµ
-	uint16_t PWM_Angle_Min;	//¶æ»ú0¶ÈPWMÖµ
-	uint16_t PWM_Angle_Max;	//¶æ»ú180/270¶ÈÊ±PWMÖµ
-	uint16_t Angle;			//¶æ»ú±ê×¼½Ç¶È·¶Î§180/270
-	uint16_t Angle_MIN;		//ÏŞ·ù×îĞ¡½Ç¶ÈÖµ
-	uint16_t Angle_MAX;		//ÏŞ·ù×î´ó½Ç¶ÈÖµ
+	uint8_t TIM_CH;			//å®šæ—¶å™¨é€šé“
+	uint16_t PWM_Limit_Min;	//èˆµæœºæœ€å°PWMå€¼
+	uint16_t PWM_Limit_Max;	//èˆµæœºæœ€å¤§PWMå€¼
+	uint16_t PWM_Angle_Min;	//èˆµæœº0åº¦PWMå€¼
+	uint16_t PWM_Angle_Max;	//èˆµæœº180/270åº¦æ—¶PWMå€¼
+	uint16_t Angle;			//èˆµæœºæ ‡å‡†è§’åº¦èŒƒå›´180/270
+	uint16_t Angle_MIN;		//é™å¹…æœ€å°è§’åº¦å€¼
+	uint16_t Angle_MAX;		//é™å¹…æœ€å¤§è§’åº¦å€¼
 }Server_Typedef;
 
 void Servos_Init(void);

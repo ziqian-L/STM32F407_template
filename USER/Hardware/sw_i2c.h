@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2023 ¸ĞÎªÖÇÄÜ¿Æ¼¼(¼ÃÄÏ)
+ï»¿/*
+ * Copyright (c) 2023 æ„Ÿä¸ºæ™ºèƒ½ç§‘æŠ€(æµå—)
  *
  * This software is licensed under terms that can be found in the LICENSE file
  * in the root directory of this software component.
@@ -19,45 +19,45 @@ typedef struct {
 } sw_i2c_interface_t;
 
 /**
- * @brief ´ÓIIC×ÜÏßÉÏµÄÉè±¸¶ÁÈ¡¶à¸ö×Ö½Ú
+ * @brief ä»IICæ€»çº¿ä¸Šçš„è®¾å¤‡è¯»å–å¤šä¸ªå­—èŠ‚
  * @param i2c_interface
- * @param dev_addr ´ÓÉè±¸µØÖ·
- * @param[out] data ¶ÁÈ¡µ½µÄ×Ö½ÚÊı×é
- * @param data_length ¶ÁÈ¡´óĞ¡(×Ö½Ú)
- * @return 0:³É¹¦, 1:´íÎó
+ * @param dev_addr ä»è®¾å¤‡åœ°å€
+ * @param[out] data è¯»å–åˆ°çš„å­—èŠ‚æ•°ç»„
+ * @param data_length è¯»å–å¤§å°(å­—èŠ‚)
+ * @return 0:æˆåŠŸ, 1:é”™è¯¯
  */
 int8_t sw_i2c_read(sw_i2c_interface_t *i2c_interface, uint8_t dev_addr, uint8_t *data, uint8_t data_length);
 int8_t sw_i2c_write(sw_i2c_interface_t *i2c_interface, uint8_t dev_addr, const uint8_t *data, uint8_t data_length);
 
 /**
- * @brief ´ÓIIC×ÜÏßÉÏµÄÉè±¸¶ÁÈ¡Ò»¸ö×Ö½Ú
+ * @brief ä»IICæ€»çº¿ä¸Šçš„è®¾å¤‡è¯»å–ä¸€ä¸ªå­—èŠ‚
  * @param i2c_interface
- * @param dev_addr ´ÓÉè±¸µØÖ·
- * @param[out] data ¶ÁÈ¡µ½µÄ×Ö½Ú
- * @return 0:³É¹¦, 1:´íÎó
+ * @param dev_addr ä»è®¾å¤‡åœ°å€
+ * @param[out] data è¯»å–åˆ°çš„å­—èŠ‚
+ * @return 0:æˆåŠŸ, 1:é”™è¯¯
  */
 int8_t sw_i2c_read_byte(sw_i2c_interface_t *i2c_interface, uint8_t dev_addr, uint8_t *data);
 int8_t sw_i2c_write_byte(sw_i2c_interface_t *i2c_interface, uint8_t dev_addr, const uint8_t data);
 
 /**
- * @brief ¶ÁÈ¡IIC×ÜÏß´ÓÉè±¸µÄ¼Ä´æÆ÷Êı¾İ. ¼´ÏÈĞ´Èë¼Ä´æÆ÷µØÖ·,ÎŞÖÕÖ¹Î»,ÔÙÁ¬Ğø¶ÁÈ¡ËùĞèÊı¾İ
+ * @brief è¯»å–IICæ€»çº¿ä»è®¾å¤‡çš„å¯„å­˜å™¨æ•°æ®. å³å…ˆå†™å…¥å¯„å­˜å™¨åœ°å€,æ— ç»ˆæ­¢ä½,å†è¿ç»­è¯»å–æ‰€éœ€æ•°æ®
  * @param i2c_interface
- * @param dev_addr ´ÓÉè±¸µØÖ·
- * @param mem_addr ¼Ä´æÆ÷µØÖ·
- * @param[out] data ¶ÁÈ¡µ½µÄ×Ö½ÚÊı×é
- * @param data_length ¶ÁÈ¡´óĞ¡(×Ö½Ú),²»°üÀ¨¼Ä´æÆ÷µØÖ·±¾Éí
- * @return 0:³É¹¦, 1:´íÎó
+ * @param dev_addr ä»è®¾å¤‡åœ°å€
+ * @param mem_addr å¯„å­˜å™¨åœ°å€
+ * @param[out] data è¯»å–åˆ°çš„å­—èŠ‚æ•°ç»„
+ * @param data_length è¯»å–å¤§å°(å­—èŠ‚),ä¸åŒ…æ‹¬å¯„å­˜å™¨åœ°å€æœ¬èº«
+ * @return 0:æˆåŠŸ, 1:é”™è¯¯
  */
 int8_t sw_i2c_mem_read(sw_i2c_interface_t *i2c_interface, uint8_t dev_addr, uint8_t mem_addr, uint8_t *data, uint8_t data_length);
 
 /**
- * @brief Ğ´ÈëIIC×ÜÏß´ÓÉè±¸µÄ¼Ä´æÆ÷. ¼´ÏÈĞ´Èë¼Ä´æÆ÷µØÖ·,ÔÙÁ¬ĞøĞ´ÈëÊı×éÖĞµÄÊı¾İ
+ * @brief å†™å…¥IICæ€»çº¿ä»è®¾å¤‡çš„å¯„å­˜å™¨. å³å…ˆå†™å…¥å¯„å­˜å™¨åœ°å€,å†è¿ç»­å†™å…¥æ•°ç»„ä¸­çš„æ•°æ®
  * @param i2c_interface
- * @param dev_addr ´ÓÉè±¸µØÖ·
- * @param mem_addr ¼Ä´æÆ÷µØÖ·
- * @param[out] data Á¬ĞøĞ´ÈëµÄÊı¾İ
- * @param data_length ËùĞ´ÈëµÄ×Ö½Ú´óĞ¡,²»°üÀ¨¼Ä´æÆ÷µØÖ·±¾Éí
- * @return 0:³É¹¦, 1:´íÎó
+ * @param dev_addr ä»è®¾å¤‡åœ°å€
+ * @param mem_addr å¯„å­˜å™¨åœ°å€
+ * @param[out] data è¿ç»­å†™å…¥çš„æ•°æ®
+ * @param data_length æ‰€å†™å…¥çš„å­—èŠ‚å¤§å°,ä¸åŒ…æ‹¬å¯„å­˜å™¨åœ°å€æœ¬èº«
+ * @return 0:æˆåŠŸ, 1:é”™è¯¯
  */
 int8_t sw_i2c_mem_write(sw_i2c_interface_t *i2c_interface, uint8_t dev_addr, uint8_t mem_addr, const uint8_t *data, uint8_t data_length);
 

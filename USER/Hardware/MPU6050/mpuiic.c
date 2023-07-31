@@ -1,58 +1,58 @@
-#include "mpuiic.h"
+ï»¿#include "mpuiic.h"
 #include "delay.h"
 
-//MPU IIC ÑÓÊ±º¯Êý
+//MPU IIC å»¶æ—¶å‡½æ•°
 void MPU_IIC_Delay(void)
 {
 	delay_us(2);
 }
 
-//³õÊ¼»¯IIC
+//åˆå§‹åŒ–IIC
 void MPU_IIC_Init(void)
 {			
 	GPIO_InitTypeDef  GPIO_InitStructure;
 
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC,ENABLE);//ÏÈÊ¹ÄÜÍâÉèIO PORTBÊ±ÖÓ 
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC,ENABLE);//å…ˆä½¿èƒ½å¤–è®¾IO PORTBæ—¶é’Ÿ 
 		
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1|GPIO_Pin_2;	 // ¶Ë¿ÚÅäÖÃ
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT; 		 //ÍÆÍìÊä³ö
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1|GPIO_Pin_2;	 // ç«¯å£é…ç½®
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT; 		 //æŽ¨æŒ½è¾“å‡º
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;		 //IO¿ÚËÙ¶ÈÎª50MHz
-	GPIO_Init(GPIOC, &GPIO_InitStructure);					 //¸ù¾ÝÉè¶¨²ÎÊý³õÊ¼»¯GPIO 
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;		 //IOå£é€Ÿåº¦ä¸º50MHz
+	GPIO_Init(GPIOC, &GPIO_InitStructure);					 //æ ¹æ®è®¾å®šå‚æ•°åˆå§‹åŒ–GPIO 
 
 	GPIO_SetBits(GPIOC,GPIO_Pin_1|GPIO_Pin_2);				
  
 }
-//²úÉúIICÆðÊ¼ÐÅºÅ
+//äº§ç”ŸIICèµ·å§‹ä¿¡å·
 void MPU_IIC_Start(void)
 {
-	MPU_SDA_OUT();     //sdaÏßÊä³ö
+	MPU_SDA_OUT();     //sdaçº¿è¾“å‡º
 	MPU_IIC_SDA=1;	  	  
 	MPU_IIC_SCL=1;
 	MPU_IIC_Delay();
  	MPU_IIC_SDA=0;//START:when CLK is high,DATA change form high to low 
 	MPU_IIC_Delay();
-	MPU_IIC_SCL=0;//Ç¯×¡I2C×ÜÏß£¬×¼±¸·¢ËÍ»ò½ÓÊÕÊý¾Ý 
+	MPU_IIC_SCL=0;//é’³ä½I2Cæ€»çº¿ï¼Œå‡†å¤‡å‘é€æˆ–æŽ¥æ”¶æ•°æ® 
 }	  
-//²úÉúIICÍ£Ö¹ÐÅºÅ
+//äº§ç”ŸIICåœæ­¢ä¿¡å·
 void MPU_IIC_Stop(void)
 {
-	MPU_SDA_OUT();//sdaÏßÊä³ö
+	MPU_SDA_OUT();//sdaçº¿è¾“å‡º
 	MPU_IIC_SCL=0;
 	MPU_IIC_SDA=0;//STOP:when CLK is high DATA change form low to high
  	MPU_IIC_Delay();
 	MPU_IIC_SCL=1;  
-	MPU_IIC_SDA=1;//·¢ËÍI2C×ÜÏß½áÊøÐÅºÅ
+	MPU_IIC_SDA=1;//å‘é€I2Cæ€»çº¿ç»“æŸä¿¡å·
 	MPU_IIC_Delay();							   	
 }
-//µÈ´ýÓ¦´ðÐÅºÅµ½À´
-//·µ»ØÖµ£º1£¬½ÓÊÕÓ¦´ðÊ§°Ü
-//        0£¬½ÓÊÕÓ¦´ð³É¹¦
+//ç­‰å¾…åº”ç­”ä¿¡å·åˆ°æ¥
+//è¿”å›žå€¼ï¼š1ï¼ŒæŽ¥æ”¶åº”ç­”å¤±è´¥
+//        0ï¼ŒæŽ¥æ”¶åº”ç­”æˆåŠŸ
 u8 MPU_IIC_Wait_Ack(void)
 {
 	u8 ucErrTime=0;
-	MPU_SDA_IN();      //SDAÉèÖÃÎªÊäÈë  
+	MPU_SDA_IN();      //SDAè®¾ç½®ä¸ºè¾“å…¥  
 	MPU_IIC_SDA=1;MPU_IIC_Delay();	   
 	MPU_IIC_SCL=1;MPU_IIC_Delay();	 
 	while(MPU_READ_SDA)
@@ -64,10 +64,10 @@ u8 MPU_IIC_Wait_Ack(void)
 			return 1;
 		}
 	}
-	MPU_IIC_SCL=0;//Ê±ÖÓÊä³ö0 	   
+	MPU_IIC_SCL=0;//æ—¶é’Ÿè¾“å‡º0 	   
 	return 0;  
 } 
-//²úÉúACKÓ¦´ð
+//äº§ç”ŸACKåº”ç­”
 void MPU_IIC_Ack(void)
 {
 	MPU_IIC_SCL=0;
@@ -78,7 +78,7 @@ void MPU_IIC_Ack(void)
 	MPU_IIC_Delay();
 	MPU_IIC_SCL=0;
 }
-//²»²úÉúACKÓ¦´ð		    
+//ä¸äº§ç”ŸACKåº”ç­”		    
 void MPU_IIC_NAck(void)
 {
 	MPU_IIC_SCL=0;
@@ -89,15 +89,15 @@ void MPU_IIC_NAck(void)
 	MPU_IIC_Delay();
 	MPU_IIC_SCL=0;
 }					 				     
-//IIC·¢ËÍÒ»¸ö×Ö½Ú
-//·µ»Ø´Ó»úÓÐÎÞÓ¦´ð
-//1£¬ÓÐÓ¦´ð
-//0£¬ÎÞÓ¦´ð			  
+//IICå‘é€ä¸€ä¸ªå­—èŠ‚
+//è¿”å›žä»Žæœºæœ‰æ— åº”ç­”
+//1ï¼Œæœ‰åº”ç­”
+//0ï¼Œæ— åº”ç­”			  
 void MPU_IIC_Send_Byte(u8 txd)
 {                        
     u8 t;   
 	MPU_SDA_OUT(); 	    
-    MPU_IIC_SCL=0;//À­µÍÊ±ÖÓ¿ªÊ¼Êý¾Ý´«Êä
+    MPU_IIC_SCL=0;//æ‹‰ä½Žæ—¶é’Ÿå¼€å§‹æ•°æ®ä¼ è¾“
     for(t=0;t<8;t++)
     {              
         MPU_IIC_SDA=(txd&0x80)>>7;
@@ -108,11 +108,11 @@ void MPU_IIC_Send_Byte(u8 txd)
 		MPU_IIC_Delay();
     }	 
 } 	    
-//¶Á1¸ö×Ö½Ú£¬ack=1Ê±£¬·¢ËÍACK£¬ack=0£¬·¢ËÍnACK   
+//è¯»1ä¸ªå­—èŠ‚ï¼Œack=1æ—¶ï¼Œå‘é€ACKï¼Œack=0ï¼Œå‘é€nACK   
 u8 MPU_IIC_Read_Byte(unsigned char ack)
 {
 	unsigned char i,receive=0;
-	MPU_SDA_IN();//SDAÉèÖÃÎªÊäÈë
+	MPU_SDA_IN();//SDAè®¾ç½®ä¸ºè¾“å…¥
     for(i=0;i<8;i++ )
 	{
         MPU_IIC_SCL=0; 
@@ -123,9 +123,9 @@ u8 MPU_IIC_Read_Byte(unsigned char ack)
 		MPU_IIC_Delay(); 
     }					 
     if (!ack)
-        MPU_IIC_NAck();//·¢ËÍnACK
+        MPU_IIC_NAck();//å‘é€nACK
     else
-        MPU_IIC_Ack(); //·¢ËÍACK   
+        MPU_IIC_Ack(); //å‘é€ACK   
     return receive;
 }
 

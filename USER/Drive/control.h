@@ -1,11 +1,11 @@
-#ifndef __CONTROL_H
+ï»¿#ifndef __CONTROL_H
 #define __CONTROL_H
 
 #include "sys.h"
 
-extern float Pitch,Roll,Yaw;    //½Ç¶È
-extern short gyrox,gyroy,gyroz;	//½ÇËÙ¶È
-extern short aacx,aacy,aacz;    //¼ÓËÙ¶È
+extern float Pitch,Roll,Yaw;    //è§’åº¦
+extern short gyrox,gyroy,gyroz;	//è§’é€Ÿåº¦
+extern short aacx,aacy,aacz;    //åŠ é€Ÿåº¦
 extern int16_t Left_Wheel_speed,Right_Wheel_speed;
 extern int32_t Left_Wheel_PWM,Right_Wheel_PWM;
 

@@ -1,4 +1,4 @@
-#include "delay.h"
+ï»¿#include "delay.h"
 #include "usart.h"
 #include "motor.h"
 #include "encoder.h"
@@ -17,71 +17,71 @@
 #include "mlx90614.h"
 
 /********************************************************************
- * ¿ØÖÆ¾ùÔÚÖĞ¶ÏÀïÍê³É£¬Ê¹ÓÃTIM9×÷Îª¶¨Ê±ÖĞ¶Ï
+ * æ§åˆ¶å‡åœ¨ä¸­æ–­é‡Œå®Œæˆï¼Œä½¿ç”¨TIM9ä½œä¸ºå®šæ—¶ä¸­æ–­
 ********************************************************************/
-//PID¿ØÖÆ
+//PIDæ§åˆ¶
 PID_TypeDef PID_Left,PID_Right;
 
-//Í¨¹ı±àÂëÆ÷»ñÈ¡µÄËÙ¶È
+//é€šè¿‡ç¼–ç å™¨è·å–çš„é€Ÿåº¦
 int16_t Left_Wheel_speed,Right_Wheel_speed;
 int32_t Left_Wheel_PWM,Right_Wheel_PWM;
 
-//MPU6050»ñÈ¡µÄÖµ
-float Pitch,Roll,Yaw;		//½Ç¶È
+//MPU6050è·å–çš„å€¼
+float Pitch,Roll,Yaw;		//è§’åº¦
 
 /*****
- * Èë¿Ú²ÎÊı£º
- *  PSC£ºÔ¤·ÖÆµÏµÊı
- *  ARR£º×Ô¶¯ÖØ×°ÔØÖµ
+ * å…¥å£å‚æ•°ï¼š
+ *  PSCï¼šé¢„åˆ†é¢‘ç³»æ•°
+ *  ARRï¼šè‡ªåŠ¨é‡è£…è½½å€¼
 *****/
 void TIM9_Timed_Interrupt(uint32_t PSC,uint32_t ARR)
 {
     NVIC_InitTypeDef NVIC_InitStructure;
 
-    //³õÊ¼»¯TIM9Ê±ÖÓ
+    //åˆå§‹åŒ–TIM9æ—¶é’Ÿ
     RCC->APB2ENR |= RCC_APB2ENR_TIM9EN;
 
-    //Ê±»ùµ¥Ôª³õÊ¼»¯
-    //ÏòÉÏ¼ÆÊıÄ£Ê½
+    //æ—¶åŸºå•å…ƒåˆå§‹åŒ–
+    //å‘ä¸Šè®¡æ•°æ¨¡å¼
     TIM9->CR1 |= 0x00;
     TIM9->PSC = PSC;
     TIM9->ARR = ARR;
 
-    //ÖĞ¶ÏÓÅÏÈ¼¶ÅäÖÃ
+    //ä¸­æ–­ä¼˜å…ˆçº§é…ç½®
     NVIC_InitStructure.NVIC_IRQChannel = TIM1_BRK_TIM9_IRQn;
     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&NVIC_InitStructure);
 
-    //Ê¹ÄÜ¶¨Ê±Æ÷ÖĞ¶Ï
+    //ä½¿èƒ½å®šæ—¶å™¨ä¸­æ–­
     TIM_ITConfig(TIM9,TIM_IT_Update,ENABLE);
 	
-	//¿ªÆôTIM9
+	//å¼€å¯TIM9
 	TIM_Cmd(TIM9,ENABLE);
 }
 
 
 
 /*****
- * TIM9¶¨Ê±ÖĞ¶Ï·şÎñº¯Êı
+ * TIM9å®šæ—¶ä¸­æ–­æœåŠ¡å‡½æ•°
 *****/
 void TIM1_BRK_TIM9_IRQHandler(void)
 {
     if (TIM_GetITStatus(TIM9,TIM_IT_Update) != RESET)
     {	
-		/*********************±àÂëÆ÷¿ØËÙ*********************/
-
-		/*1.¶¨Ê±¶ÁÈ¡±àÂëÆ÷¡¢MPU6050µÄÖµ*/
+		/*********************ç¼–ç å™¨æ§é€Ÿ*********************/
+		/*1.å®šæ—¶è¯»å–ç¼–ç å™¨ã€MPU6050çš„å€¼*/
         Left_Wheel_speed = Read_Speed(3);
         Right_Wheel_speed = Read_Speed(4);
         mpu_dmp_get_data(&Pitch,&Roll,&Yaw);
-        /*2.PID¿ØÖÆ*/
+        /*2.PIDæ§åˆ¶*/
 		Left_Wheel_PWM = Positional_PID_Contorl(&PID_Left,Left_Wheel_speed);
         Right_Wheel_PWM = Positional_PID_Contorl(&PID_Right,Right_Wheel_speed);
-        /*3.PWMÊä³ö*/
+        /*3.PWMè¾“å‡º*/
         PWM_Limit(&Left_Wheel_PWM,&Right_Wheel_PWM);
         Load_PWM(Left_Wheel_PWM,Right_Wheel_PWM);
+		/**********************äº‘å°è¿½è¸ª*********************/
     }
     TIM_ClearFlag(TIM9,TIM_IT_Update);
 	GraySensor_LinePatrol();
@@ -90,15 +90,15 @@ void TIM1_BRK_TIM9_IRQHandler(void)
 
 
 /*****
- * ´®¿Ú1ÖĞ¶Ï·şÎñº¯Êı
+ * ä¸²å£1ä¸­æ–­æœåŠ¡å‡½æ•°
 *****/
 void USART1_IRQHandler(void)
 {
-    /* ¾Ö²¿¾²Ì¬±äÁ¿£º½ÓÊÕ»º´æ */
+    /* å±€éƒ¨é™æ€å˜é‡ï¼šæ¥æ”¶ç¼“å­˜ */
     static u8 RxBuffer[10];
-    /* Êı¾İ³¤¶È *//* Êı¾İÊı×éÏÂ±ê */
+    /* æ•°æ®é•¿åº¦ *//* æ•°æ®æ•°ç»„ä¸‹æ ‡ */
     static u8  data_cnt = 0;
-    /* ½ÓÊÕ×´Ì¬ */
+    /* æ¥æ”¶çŠ¶æ€ */
     static u8 state = 0;
 	uint8_t data;
 	if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)
@@ -122,12 +122,12 @@ void USART1_IRQHandler(void)
 }
 
 /*****
- * ´®¿Ú2ÖĞ¶Ï·şÎñº¯Êı
+ * ä¸²å£2ä¸­æ–­æœåŠ¡å‡½æ•°
 *****/
 void USART2_IRQHandler(void)
 {
 	uint8_t data;
-	//¶ÁÈ¡SR¼Ä´æÆ÷ºÍDR¼Ä´æÆ÷ºó£¬ÖĞ¶Ï±êÖ¾Î»ÇåÁã
+	//è¯»å–SRå¯„å­˜å™¨å’ŒDRå¯„å­˜å™¨åï¼Œä¸­æ–­æ ‡å¿—ä½æ¸…é›¶
     if (USART_GetITStatus(USART2,USART_IT_IDLE) != RESET)
     {
         data = USART_ReceiveData(USART2);
@@ -135,7 +135,7 @@ void USART2_IRQHandler(void)
     else if (USART_GetITStatus(USART2, USART_IT_RXNE) != RESET)
     {
         data = USART_ReceiveData(USART2);
-        if(Write_RingBuff(&Uart2_RingBuff, data) == RINGBUFF_ERR){//»º³åÇøÂúµÆÁÁ
+        if(Write_RingBuff(&Uart2_RingBuff, data) == RINGBUFF_ERR){//ç¼“å†²åŒºæ»¡ç¯äº®
             LED1=0;
         }else{
             LED1=1;

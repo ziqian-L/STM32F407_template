@@ -1,11 +1,11 @@
-#ifndef __LED_H
+ï»¿#ifndef __LED_H
 #define __LED_H
 
 #include "sys.h"
 
-//LED ¶Ë¿Ú¶¨Òå
+//LED ç«¯å£å®šä¹‰
 #define LED0 PFout(9)
 #define LED1 PFout(10)
 
-void LED_Init(void); //³õÊ¼»¯
+void LED_Init(void); //åˆå§‹åŒ–
 #endif

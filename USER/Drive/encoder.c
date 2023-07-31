@@ -1,122 +1,122 @@
-#include "encoder.h"
+ï»¿#include "encoder.h"
 
 /********************************************************************
- * Ê¹ÓÃ±àÂëÆ÷ĞèÒªÓÃµ½Á½¸ö¶¨Ê±Æ÷µÄ±àÂëÆ÷Ä£Ê½
- * ÔÚÕâÀïÑ¡ÓÃ16Î»¶¨Ê±Æ÷TIM3¡¢TIM4
- * Ò»Â·±àÂëÆ÷Ê¹ÓÃTIM3_CH1(PB4 »ò PA6)¡¢TIM3_CH2(PB5 »ò PA7)£¬½¨ÒéÑ¡ÓÃPB4¡¢PB5
- * Ò»Â·±àÂëÆ÷Ê¹ÓÃTIM4_CH1(PB6)¡¢TIM4_CH2(PB7)
+ * ä½¿ç”¨ç¼–ç å™¨éœ€è¦ç”¨åˆ°ä¸¤ä¸ªå®šæ—¶å™¨çš„ç¼–ç å™¨æ¨¡å¼
+ * åœ¨è¿™é‡Œé€‰ç”¨16ä½å®šæ—¶å™¨TIM3ã€TIM4
+ * ä¸€è·¯ç¼–ç å™¨ä½¿ç”¨TIM3_CH1(PB4 æˆ– PA6)ã€TIM3_CH2(PB5 æˆ– PA7)ï¼Œå»ºè®®é€‰ç”¨PB4ã€PB5
+ * ä¸€è·¯ç¼–ç å™¨ä½¿ç”¨TIM4_CH1(PB6)ã€TIM4_CH2(PB7)
 ********************************************************************/
 
 void TIM3_Encoder_Init(void)
 {
-    //GPIOBÊ±ÖÓ¡¢TIM3Ê±ÖÓ
+    //GPIOBæ—¶é’Ÿã€TIM3æ—¶é’Ÿ
     RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
     RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;
 
-    //GPIO³õÊ¼»¯
-    //¸´ÓÃ¡¢ÍìÍÆ¡¢100MHz¡¢¸¡¿Õ
+    //GPIOåˆå§‹åŒ–
+    //å¤ç”¨ã€æŒ½æ¨ã€100MHzã€æµ®ç©º
     GPIOB->MODER    |= (GPIO_MODER_MODER4_1 | GPIO_MODER_MODER5_1);
     GPIOB->OTYPER   |= 0x00;
     GPIOB->OSPEEDR  |= (GPIO_OSPEEDER_OSPEEDR4 | GPIO_OSPEEDER_OSPEEDR5);
     GPIOB->PUPDR    |= 0x00;
 
-    //GPIO¸´ÓÃ
+    //GPIOå¤ç”¨
 	GPIO_PinAFConfig(GPIOB,GPIO_PinSource4,GPIO_AF_TIM3);
 	GPIO_PinAFConfig(GPIOB,GPIO_PinSource5,GPIO_AF_TIM3);
 
-    //Ê±»ùµ¥Ôª³õÊ¼»¯
-    //µİÔö¼ÆÊı¡¢Ê±ÖÓ²»·ÖÆµ£¬Ô¤·ÖÆµÏµÊıÎª1¡¢×Ô¶¯ÖØ×°ÔØÖµÎª65536
+    //æ—¶åŸºå•å…ƒåˆå§‹åŒ–
+    //é€’å¢è®¡æ•°ã€æ—¶é’Ÿä¸åˆ†é¢‘ï¼Œé¢„åˆ†é¢‘ç³»æ•°ä¸º1ã€è‡ªåŠ¨é‡è£…è½½å€¼ä¸º65536
     TIM3->CR1 |= 0x00;
     TIM3->PSC  = 0;
     TIM3->ARR  = 65535;
 
-    //ÅäÖÃ±àÂëÆ÷Ä£Ê½
-    //±àÂëÆ÷Ä£Ê½3(0x03)£¬ÊäÈë²¶»ñÍ¨µÀCH3¡¢CH4£¬·Ç·´Ïà/ÉÏÉıÑØ´¥·¢
+    //é…ç½®ç¼–ç å™¨æ¨¡å¼
+    //ç¼–ç å™¨æ¨¡å¼3(0x03)ï¼Œè¾“å…¥æ•è·é€šé“CH3ã€CH4ï¼Œéåç›¸/ä¸Šå‡æ²¿è§¦å‘
     TIM3->SMCR  |= (TIM_SMCR_SMS_1 | TIM_SMCR_SMS_0);
     TIM3->CCMR1 |= (TIM_CCMR1_CC1S_0 | TIM_CCMR1_CC2S_0);
     TIM3->CCER  |= 0x00;
     
-    //TIM3_CH1ÊäÈë²¶»ñ³õÊ¼»¯
-    //IC1Ó³Éäµ½TI1¡¢²»·ÖÆµ¡¢ÂË²¨(fSAMPLING=fCK_INT£¬N=8)
+    //TIM3_CH1è¾“å…¥æ•è·åˆå§‹åŒ–
+    //IC1æ˜ å°„åˆ°TI1ã€ä¸åˆ†é¢‘ã€æ»¤æ³¢(fSAMPLING=fCK_INTï¼ŒN=8)
     TIM3->CCMR1 |= (TIM_CCMR1_CC1S_0 | 0x00 | (TIM_CCMR1_IC1F_1 | TIM_CCMR1_IC1F_0));
-    //Ê¹ 8  5 ÄÜÊäÈë²¶»ñ¡¢·Ç·´Ïà/ÉÏÉıÑØ´¥·¢( TIM_CCER_CC1P = 0x00,TIM_CCER_CC1NP = 0x00 )
+    //ä½¿ 8  5 èƒ½è¾“å…¥æ•è·ã€éåç›¸/ä¸Šå‡æ²¿è§¦å‘( TIM_CCER_CC1P = 0x00,TIM_CCER_CC1NP = 0x00 )
     TIM3->CCER  |= (TIM_CCER_CC1E | 0x00 | 0x00);
-    //TIM3_CH2ÊäÈë²¶»ñ³õÊ¼»¯
-    //IC2Ó³Éäµ½TI2¡¢²»·ÖÆµ¡¢ÂË²¨(fSAMPLING=fCK_INT£¬N=8)
+    //TIM3_CH2è¾“å…¥æ•è·åˆå§‹åŒ–
+    //IC2æ˜ å°„åˆ°TI2ã€ä¸åˆ†é¢‘ã€æ»¤æ³¢(fSAMPLING=fCK_INTï¼ŒN=8)
     TIM3->CCMR1 |= (TIM_CCMR1_CC2S_0 | 0x00 | (TIM_CCMR1_IC2F_1 | TIM_CCMR1_IC2F_0));
-    //Ê¹ÄÜÊäÈë²¶»ñ¡¢·Ç·´Ïà/ÉÏÉıÑØ´¥·¢( TIM_CCER_CC2P = 0x00,TIM_CCER_CC2NP = 0x00 )
+    //ä½¿èƒ½è¾“å…¥æ•è·ã€éåç›¸/ä¸Šå‡æ²¿è§¦å‘( TIM_CCER_CC2P = 0x00,TIM_CCER_CC2NP = 0x00 )
     TIM3->CCER  |= (TIM_CCER_CC2E | 0x00 | 0x00);
 
-    //Çå³ı¸üĞÂÖĞ¶Ï±êÖ¾Î»
+    //æ¸…é™¤æ›´æ–°ä¸­æ–­æ ‡å¿—ä½
     TIM3->SR = (uint16_t)~TIM_SR_UIF;
-    //Ê¹ÄÜ¸üĞÂÖĞ¶Ï
+    //ä½¿èƒ½æ›´æ–°ä¸­æ–­
     TIM3->DIER |= TIM_DIER_UIE;
-    //¼ÆÊıÆ÷ÖµÇåÁã
+    //è®¡æ•°å™¨å€¼æ¸…é›¶
     TIM3->CNT = 0;
-    //Ê¹ÄÜ¶¨Ê±Æ÷
+    //ä½¿èƒ½å®šæ—¶å™¨
     TIM_Cmd(TIM3,ENABLE);
 }
 
 void TIM4_Encoder_Init(void)
 {
-    //GPIOBÊ±ÖÓ¡¢TIM4Ê±ÖÓ
+    //GPIOBæ—¶é’Ÿã€TIM4æ—¶é’Ÿ
     RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
     RCC->APB1ENR |= RCC_APB1ENR_TIM4EN;
 
-    //GPIO³õÊ¼»¯
-    //¸´ÓÃ¡¢ÍìÍÆ¡¢100MHz¡¢¸¡¿Õ
+    //GPIOåˆå§‹åŒ–
+    //å¤ç”¨ã€æŒ½æ¨ã€100MHzã€æµ®ç©º
     GPIOB->MODER    |= (GPIO_MODER_MODER6_1 | GPIO_MODER_MODER7_1);
     GPIOB->OTYPER   |= 0x00;
     GPIOB->OSPEEDR  |= (GPIO_OSPEEDER_OSPEEDR6 | GPIO_OSPEEDER_OSPEEDR7);
     GPIOB->PUPDR    |= 0x00;
-    //GPIO¸´ÓÃ
+    //GPIOå¤ç”¨
 	GPIO_PinAFConfig(GPIOB,GPIO_PinSource6,GPIO_AF_TIM4);
 	GPIO_PinAFConfig(GPIOB,GPIO_PinSource7,GPIO_AF_TIM4);
 
-    //Ê±»ùµ¥Ôª³õÊ¼»¯
-    //µİÔö¼ÆÊı¡¢Ê±ÖÓ²»·ÖÆµ¡¢Ô¤·ÖÆµÏµÊıÎª1¡¢×Ô¶¯ÖØ×°ÔØÖµÎª65535
+    //æ—¶åŸºå•å…ƒåˆå§‹åŒ–
+    //é€’å¢è®¡æ•°ã€æ—¶é’Ÿä¸åˆ†é¢‘ã€é¢„åˆ†é¢‘ç³»æ•°ä¸º1ã€è‡ªåŠ¨é‡è£…è½½å€¼ä¸º65535
     TIM4->CR1 |= 0x00;
     TIM4->PSC  = 0;
     TIM4->ARR  = 65535;
 
-    //ÅäÖÃ±àÂëÆ÷Ä£Ê½
-    //±àÂëÆ÷Ä£Ê½3(0x03)£¬ÊäÈë²¶»ñÍ¨µÀCH1¡¢CH2£¬·Ç·´Ïà/ÉÏÉıÑØ´¥·¢
+    //é…ç½®ç¼–ç å™¨æ¨¡å¼
+    //ç¼–ç å™¨æ¨¡å¼3(0x03)ï¼Œè¾“å…¥æ•è·é€šé“CH1ã€CH2ï¼Œéåç›¸/ä¸Šå‡æ²¿è§¦å‘
     TIM4->SMCR  |= (TIM_SMCR_SMS_1 | TIM_SMCR_SMS_0);
     TIM4->CCMR1 |= (TIM_CCMR1_CC1S_0 | TIM_CCMR1_CC2S_0);
     TIM4->CCER  |= 0x00;
     
-    //TIM4_CH1ÊäÈë²¶»ñ³õÊ¼»¯
-    //IC1Ó³Éäµ½TI1¡¢²»·ÖÆµ¡¢ÂË²¨(fSAMPLING=fCK_INT£¬N=8)
+    //TIM4_CH1è¾“å…¥æ•è·åˆå§‹åŒ–
+    //IC1æ˜ å°„åˆ°TI1ã€ä¸åˆ†é¢‘ã€æ»¤æ³¢(fSAMPLING=fCK_INTï¼ŒN=8)
     TIM4->CCMR1 |= (TIM_CCMR1_CC1S_0 | 0x00 | (TIM_CCMR1_IC1F_1 | TIM_CCMR1_IC1F_0));
-    //Ê¹ÄÜÊäÈë²¶»ñ¡¢·Ç·´Ïà/ÉÏÉıÑØ´¥·¢( TIM_CCER_CC1P = 0x00,TIM_CCER_CC1NP = 0x00 )
+    //ä½¿èƒ½è¾“å…¥æ•è·ã€éåç›¸/ä¸Šå‡æ²¿è§¦å‘( TIM_CCER_CC1P = 0x00,TIM_CCER_CC1NP = 0x00 )
     TIM4->CCER  |= (TIM_CCER_CC1E | 0x00 | 0x00);
-    //TIM4_CH2ÊäÈë²¶»ñ³õÊ¼»¯
-    //IC2Ó³Éäµ½TI2¡¢²»·ÖÆµ¡¢ÂË²¨(fSAMPLING=fCK_INT£¬N=8)
+    //TIM4_CH2è¾“å…¥æ•è·åˆå§‹åŒ–
+    //IC2æ˜ å°„åˆ°TI2ã€ä¸åˆ†é¢‘ã€æ»¤æ³¢(fSAMPLING=fCK_INTï¼ŒN=8)
     TIM4->CCMR1 |= (TIM_CCMR1_CC2S_0 | 0x00 | (TIM_CCMR1_IC2F_1 | TIM_CCMR1_IC2F_0));
-    //Ê¹ÄÜÊäÈë²¶»ñ¡¢·Ç·´Ïà/ÉÏÉıÑØ´¥·¢( TIM_CCER_CC2P = 0x00,TIM_CCER_CC2NP = 0x00 )
+    //ä½¿èƒ½è¾“å…¥æ•è·ã€éåç›¸/ä¸Šå‡æ²¿è§¦å‘( TIM_CCER_CC2P = 0x00,TIM_CCER_CC2NP = 0x00 )
     TIM4->CCER  |= (TIM_CCER_CC2E | 0x00 | 0x00);
 
-    //Çå³ı¸üĞÂÖĞ¶Ï±êÖ¾Î»
+    //æ¸…é™¤æ›´æ–°ä¸­æ–­æ ‡å¿—ä½
     TIM4->SR = (uint16_t)~TIM_SR_UIF;
-    //Ê¹ÄÜ¸üĞÂÖĞ¶Ï
+    //ä½¿èƒ½æ›´æ–°ä¸­æ–­
     TIM4->DIER |= TIM_DIER_UIE;
-    //¼ÆÊıÆ÷ÖµÇåÁã
+    //è®¡æ•°å™¨å€¼æ¸…é›¶
     TIM4->CNT = 0;
-    //Ê¹ÄÜ¶¨Ê±Æ÷
+    //ä½¿èƒ½å®šæ—¶å™¨
     TIM_Cmd(TIM4,ENABLE);
 }
 
 /**********************
-±àÂëÆ÷
-ËÙ¶È¶ÁÈ¡º¯Êı
-Èë¿Ú²ÎÊı£º¶¨Ê±Æ÷
+ç¼–ç å™¨
+é€Ÿåº¦è¯»å–å‡½æ•°
+å…¥å£å‚æ•°ï¼šå®šæ—¶å™¨
 **********************/
 int Read_Speed(int TIMx)
 {
 	int value_1;
 	switch(TIMx)
 	{
-        //1.²É¼¯±àÂëÆ÷µÄ¼ÆÊıÖµ²¢±£´æ¡£2.½«¶¨Ê±Æ÷µÄ¼ÆÊıÖµÇåÁã¡£
+        //1.é‡‡é›†ç¼–ç å™¨çš„è®¡æ•°å€¼å¹¶ä¿å­˜ã€‚2.å°†å®šæ—¶å™¨çš„è®¡æ•°å€¼æ¸…é›¶ã€‚
 		case 3:value_1=(short)TIM_GetCounter(TIM3);TIM_SetCounter(TIM3,0);break;
 		case 4:value_1=(short)TIM_GetCounter(TIM4);TIM_SetCounter(TIM4,0);break;
 		default:value_1=0;

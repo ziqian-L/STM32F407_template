@@ -1,15 +1,15 @@
-#include "buzz.h"
+ï»¿#include "buzz.h"
 
 /**
- * ·äÃùÆ÷£ºPE7
- * Ä¬ÈÏÏÂÀ­
+ * èœ‚é¸£å™¨ï¼šPE7
+ * é»˜è®¤ä¸‹æ‹‰
 **/
 void Buzz_Init(void)
 {
-    //GPIOÊ±ÖÓ
+    //GPIOæ—¶é’Ÿ
     RCC->AHB1ENR |= RCC_AHB1ENR_GPIOGEN;
-    //GPIO³õÊ¼»¯
-    //Í¨ÓÃÊä³ö¡¢ÍìÍÆ¡¢100MHz¡¢ÏÂÀ­
+    //GPIOåˆå§‹åŒ–
+    //é€šç”¨è¾“å‡ºã€æŒ½æŽ¨ã€100MHzã€ä¸‹æ‹‰
     GPIOG->MODER    |= GPIO_MODER_MODER1_0;
     GPIOG->OTYPER   |= 0x00;
     GPIOG->OSPEEDR  |= GPIO_OSPEEDER_OSPEEDR1;

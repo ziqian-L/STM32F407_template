@@ -1,4 +1,4 @@
-#include "graysensor.h"
+ï»¿#include "graysensor.h"
 #include "control.h"
 #include "pid.h"
 #include "led.h"
@@ -7,29 +7,29 @@
 #ifdef Five_Way_GraySensor
 struct
 {
-    float Mid_yaw = 0;          //»Ò¶ÈÑ­¼£Ä¿±êyawÖµ
-	float Yaw_Error = 0;        //Ä¿±êyawÖµÓëµ±Ç°yawÖµµÄ²î£¬¼´yawµÄÆ«ÒÆ£¬ÓÃÓÚÅĞ¶ÏĞ¡³µÆ«ÒÆÁËºÚÏß¶àÉÙ
-    uint8_t Debounce = 0;       //ÅĞ¶ÏÆğÊ¼ÏßÊ±Ïû¶¶
-    uint8_t Circle = 0;         //ĞĞÊ»È¦Êı
-    uint16_t Circle_count = 0;  //È¦Êı¼ÆÊıÖµ
-    uint16_t Debounce_count = 0;//Ïû¶¶¼ÆÊıÖµ
-    double Gray_Count_Error = 0;//»Ò¶È¼ÆÊıÀÛ¼ÆµÄ²îÖµ
-	uint8_t Gray_Location_Information = 0;  //»Ò¶È´«¸ĞÆ÷µÄÎ»ÖÃĞÅÏ¢
+    float Mid_yaw = 0;          //ç°åº¦å¾ªè¿¹ç›®æ ‡yawå€¼
+	float Yaw_Error = 0;        //ç›®æ ‡yawå€¼ä¸å½“å‰yawå€¼çš„å·®ï¼Œå³yawçš„åç§»ï¼Œç”¨äºåˆ¤æ–­å°è½¦åç§»äº†é»‘çº¿å¤šå°‘
+    uint8_t Debounce = 0;       //åˆ¤æ–­èµ·å§‹çº¿æ—¶æ¶ˆæŠ–
+    uint8_t Circle = 0;         //è¡Œé©¶åœˆæ•°
+    uint16_t Circle_count = 0;  //åœˆæ•°è®¡æ•°å€¼
+    uint16_t Debounce_count = 0;//æ¶ˆæŠ–è®¡æ•°å€¼
+    double Gray_Count_Error = 0;//ç°åº¦è®¡æ•°ç´¯è®¡çš„å·®å€¼
+	uint8_t Gray_Location_Information = 0;  //ç°åº¦ä¼ æ„Ÿå™¨çš„ä½ç½®ä¿¡æ¯
 } FiveWay;
 
 /*****
- * 5Â·»Ò¶È´«¸ĞÆ÷Çı¶¯-²¢ĞĞÊäÈë
- * Ê¹ÓÃIO¿Ú£ºPE7¡¢PE8¡¢PE9¡¢PE10¡¢PE11
- * PE12ÓÃÔÚºìÍâ¶Ô¹Ü£¬ÓÃÓÚËÍÒ©Ğ¡³µÊ¶±ğÎïÌå
+ * 5è·¯ç°åº¦ä¼ æ„Ÿå™¨é©±åŠ¨-å¹¶è¡Œè¾“å…¥
+ * ä½¿ç”¨IOå£ï¼šPE7ã€PE8ã€PE9ã€PE10ã€PE11
+ * PE12ç”¨åœ¨çº¢å¤–å¯¹ç®¡ï¼Œç”¨äºé€è¯å°è½¦è¯†åˆ«ç‰©ä½“
 *****/
 void GraySensor_Init(void)
 {
     GPIO_InitTypeDef GPIO_InitStruct;
 
-    //GPIOEÊ±ÖÓ
+    //GPIOEæ—¶é’Ÿ
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE,ENABLE);
 
-    //PE7¡¢PE8¡¢PE9¡¢PE10¡¢PE11¡¢PE12ÊäÈë¡¢ÍìÍÆ¡¢100MHz¡¢¸¡¿Õ
+    //PE7ã€PE8ã€PE9ã€PE10ã€PE11ã€PE12è¾“å…¥ã€æŒ½æ¨ã€100MHzã€æµ®ç©º
     GPIO_InitStruct.GPIO_Pin    = GPIO_Pin_7|GPIO_Pin_8|GPIO_Pin_9|GPIO_Pin_10|GPIO_Pin_11|GPIO_Pin_12;
     GPIO_InitStruct.GPIO_Mode   = GPIO_Mode_IN;
     GPIO_InitStruct.GPIO_OType  = GPIO_OType_PP;
@@ -40,18 +40,18 @@ void GraySensor_Init(void)
 
 
 /*****
- * 5Â·»Ò¶È´«¸ĞÆ÷Ñ²Ïß
+ * 5è·¯ç°åº¦ä¼ æ„Ÿå™¨å·¡çº¿
 *****/
 int16_t GraySensor_LinePatrol(void)
 {
 	FiveWay.Yaw_Error = Yaw - FiveWay.Mid_yaw;
-	//Í¨¹ı¶ÁÈ¡GPIOEµÄÊäÈëÊı¾İ¼Ä´æÆ÷»ñÈ¡»Ò¶È´«¸ĞÆ÷Î»ÖÃĞÅÏ¢
+	//é€šè¿‡è¯»å–GPIOEçš„è¾“å…¥æ•°æ®å¯„å­˜å™¨è·å–ç°åº¦ä¼ æ„Ÿå™¨ä½ç½®ä¿¡æ¯
     FiveWay.Gray_Location_Information = (uint8_t)(GPIOE->IDR>>7);
-	//½«Êı¾İ¸ßÈıÎ»ÇåÁã·ÀÖ¹¸ÉÈÅ
+	//å°†æ•°æ®é«˜ä¸‰ä½æ¸…é›¶é˜²æ­¢å¹²æ‰°
 	FiveWay.Gray_Location_Information &= ~(uint8_t)0xE0;
-	//Î»£º	8	7	6	5	4	3	2	1
-	//Öµ£º	0	0	0	L1	L1	M	R1	R2
-/*************************Â·¿ÚÊ¶±ğ*************************/
+	//ä½ï¼š	8	7	6	5	4	3	2	1
+	//å€¼ï¼š	0	0	0	L1	L1	M	R1	R2
+/*************************è·¯å£è¯†åˆ«*************************/
 	if (FiveWay.Gray_Location_Information == 0x0A)//01010 - 0x0A
 	{
 		if (crossing == 0)
@@ -67,94 +67,94 @@ int16_t GraySensor_LinePatrol(void)
 			FiveWay.Yaw_Error = 0;
 		}
 	}
-/*************************Ñ­¼£²¿·Ö*************************/
+/*************************å¾ªè¿¹éƒ¨åˆ†*************************/
     switch (FiveWay.Gray_Location_Information)
     {
-    /*µ±´«¸ĞÆ÷¼ì²â²»µ½ºÚÏßÊ±*/
+    /*å½“ä¼ æ„Ÿå™¨æ£€æµ‹ä¸åˆ°é»‘çº¿æ—¶*/
     case 0x00:
-        /************³µÉíÆ«ÓÒ************/
+        /************è½¦èº«åå³************/
         if (FiveWay.Yaw_Error < 0)
         {
-            //ºÚÏßÎ»ÓÚL2ÓëL1Ö®¼ä£¬´ËÊ±³µÉíÆ«ÓÒ
+            //é»‘çº¿ä½äºL2ä¸L1ä¹‹é—´ï¼Œæ­¤æ—¶è½¦èº«åå³
             if (FiveWay.Yaw_Error > -22 && FiveWay.Yaw_Error < -12)
             {
                 FiveWay.Gray_Count_Error+=0.004;
                 Limit_double_Value(&FiveWay.Gray_Count_Error,2.4,3.4);
             }
-            //ºÚÏßÔ½³ö¼ì²â·¶Î§£¬´ËÊ±³µÉíÆ«ÓÒ
+            //é»‘çº¿è¶Šå‡ºæ£€æµ‹èŒƒå›´ï¼Œæ­¤æ—¶è½¦èº«åå³
             else if (FiveWay.Yaw_Error < -34) 
 				FiveWay.Gray_Count_Error+=0.01;
         }
-        /************³µÉíÆ«×ó************/
+        /************è½¦èº«åå·¦************/
         else if (FiveWay.Yaw_Error > 0)
         {
-            //ºÚÏßÎ»ÓÚR1ÓëR2Ö®¼ä,´ËÊ±³µÉíÆ«×ó
+            //é»‘çº¿ä½äºR1ä¸R2ä¹‹é—´,æ­¤æ—¶è½¦èº«åå·¦
             if (FiveWay.Yaw_Error > 12 && FiveWay.Yaw_Error < 22)
             {
                 FiveWay.Gray_Count_Error-=0.004;
                 Limit_double_Value(&FiveWay.Gray_Count_Error,-3.4,-2.4);
             }
-            //ºÚÏßÔ½³ö¼ì²â·¶Î§£¬´ËÊ±³µÉíÆ«×ó
+            //é»‘çº¿è¶Šå‡ºæ£€æµ‹èŒƒå›´ï¼Œæ­¤æ—¶è½¦èº«åå·¦
             else if (FiveWay.Yaw_Error > 34)
 				FiveWay.Gray_Count_Error-=0.01;
         }
         break;
 
-    /*µ±ºÚÏßÕıºÃÔÚ»Ò¶È´«¸ĞÆ÷ÏÂÊ±*/
+    /*å½“é»‘çº¿æ­£å¥½åœ¨ç°åº¦ä¼ æ„Ÿå™¨ä¸‹æ—¶*/
 //    case 0x01://00001 - 0x01
-//        //½öÓĞÒ»¸ö´«¸ĞÆ÷¼ì²âµ½ºÚÏß
-//        //ºÚÏßÔÚGray_R2ÏÂ£¬´ËÊ±³µÉíÆ«×ó
+//        //ä»…æœ‰ä¸€ä¸ªä¼ æ„Ÿå™¨æ£€æµ‹åˆ°é»‘çº¿
+//        //é»‘çº¿åœ¨Gray_R2ä¸‹ï¼Œæ­¤æ—¶è½¦èº«åå·¦
 //        FiveWay.Gray_Count_Error-=0.005;
 //        Limit_double_Value(&FiveWay.Gray_Count_Error,-4.8,-3.4);
 //        break;
 
     case 0x02://00010 - 0x02
-        //½öÓĞÒ»¸ö´«¸ĞÆ÷¼ì²âµ½ºÚÏß
-        //ºÚÏßÔÚGray_R1ÏÂ£¬´ËÊ±³µÉíÆ«×ó
+        //ä»…æœ‰ä¸€ä¸ªä¼ æ„Ÿå™¨æ£€æµ‹åˆ°é»‘çº¿
+        //é»‘çº¿åœ¨Gray_R1ä¸‹ï¼Œæ­¤æ—¶è½¦èº«åå·¦
 		FiveWay.Gray_Count_Error-=0.002;
         Limit_double_Value(&FiveWay.Gray_Count_Error,-2.3,-1.2);
         break;
 
     case 0x06://00110 - 0x06
-        //ÓĞÁ½¸ö´«¸ĞÆ÷¼ì²âµ½ºÚÏß
-        //ºÚÏßÎ»ÓÚMÓëR1Ö®¼ä,´ËÊ±³µÉíÆ«×ó
+        //æœ‰ä¸¤ä¸ªä¼ æ„Ÿå™¨æ£€æµ‹åˆ°é»‘çº¿
+        //é»‘çº¿ä½äºMä¸R1ä¹‹é—´,æ­¤æ—¶è½¦èº«åå·¦
         FiveWay.Gray_Count_Error-=0.001;
         Limit_double_Value(&FiveWay.Gray_Count_Error,-1.2,-0.7);
         break;
 
     case 0x04://00100 - 0x04
-        //½öÓĞÒ»¸ö´«¸ĞÆ÷¼ì²âµ½ºÚÏß
-        //ºÚÏßÔÚGray_MÏÂ£¬´ËÊ±³µÉíÎ»ÓÚÖĞ¼ä
+        //ä»…æœ‰ä¸€ä¸ªä¼ æ„Ÿå™¨æ£€æµ‹åˆ°é»‘çº¿
+        //é»‘çº¿åœ¨Gray_Mä¸‹ï¼Œæ­¤æ—¶è½¦èº«ä½äºä¸­é—´
         Limit_double_Value(&FiveWay.Gray_Count_Error,-0.7,0.7);
 		FiveWay.Gray_Count_Error = 0;
-        //¸üĞÂÄ¿±êyaw
+        //æ›´æ–°ç›®æ ‡yaw
         FiveWay.Mid_yaw = Yaw;
-        //²»¶ÔÆğÊ¼Î»ÖÃÊ¶±ğ×öÏû¶¶
+        //ä¸å¯¹èµ·å§‹ä½ç½®è¯†åˆ«åšæ¶ˆæŠ–
         FiveWay.Debounce_count = 0;
         break;
 
     case 0x0C://01100 - 0x0C
-        //ÓĞÁ½¸ö´«¸ĞÆ÷¼ì²âµ½ºÚÏß
-        //ºÚÏßÎ»ÓÚL1ºÍMÖ®¼ä£¬´ËÊ±³µÉíÆ«ÓÒ
+        //æœ‰ä¸¤ä¸ªä¼ æ„Ÿå™¨æ£€æµ‹åˆ°é»‘çº¿
+        //é»‘çº¿ä½äºL1å’ŒMä¹‹é—´ï¼Œæ­¤æ—¶è½¦èº«åå³
         FiveWay.Gray_Count_Error+=0.001;
         Limit_double_Value(&FiveWay.Gray_Count_Error,0.7,1.2);
         break;
 
     case 0x08://01000 - 0x8
-        //½öÓĞÒ»¸ö´«¸ĞÆ÷¼ì²âµ½ºÚÏß
-        //ºÚÏßÔÚGray_L1ÏÂ£¬´ËÊ±³µÉíÆ«ÓÒ
+        //ä»…æœ‰ä¸€ä¸ªä¼ æ„Ÿå™¨æ£€æµ‹åˆ°é»‘çº¿
+        //é»‘çº¿åœ¨Gray_L1ä¸‹ï¼Œæ­¤æ—¶è½¦èº«åå³
 		FiveWay.Gray_Count_Error+=0.002;
         Limit_double_Value(&FiveWay.Gray_Count_Error,1.2,2.3);
         break;
 
 //    case 0x10://10000 - 0x10
-//        //½öÓĞÒ»¸ö´«¸ĞÆ÷¼ì²âµ½ºÚÏß
-//        //ºÚÏßÔÚGray_L2ÏÂ£¬´ËÊ±³µÉíÆ«ÓÒ
+//        //ä»…æœ‰ä¸€ä¸ªä¼ æ„Ÿå™¨æ£€æµ‹åˆ°é»‘çº¿
+//        //é»‘çº¿åœ¨Gray_L2ä¸‹ï¼Œæ­¤æ—¶è½¦èº«åå³
 //        FiveWay.Gray_Count_Error+=0.005;
 //        Limit_double_Value(&FiveWay.Gray_Count_Error,3.4,4.8);
 //        break;
 
-/*************************Í£Ö¹ÏßÊ¶±ğ²¿·Ö*************************/
+/*************************åœæ­¢çº¿è¯†åˆ«éƒ¨åˆ†*************************/
 	case 0x0E://01110 - 0x0E
 		if (FiveWay.Gray_Count_Error > -0.71 && FiveWay.Gray_Count_Error < 0.71)
 		{
@@ -181,7 +181,7 @@ int16_t GraySensor_LinePatrol(void)
 }
 
 /*****
- * ĞŞ¸ÄÑ²ÏßÈ¦Êı
+ * ä¿®æ”¹å·¡çº¿åœˆæ•°
 *****/
 void GraySensor_Circle(uint8_t Circle)
 {
@@ -199,7 +199,7 @@ void GraySensor_Circle(uint8_t Circle)
 
 #ifdef GW_GraySensor
 
-/* ´æ·ÅÉ¨Ãèµ½µÄµØÖ· */
+/* å­˜æ”¾æ‰«æåˆ°çš„åœ°å€ */
 uint8_t scan_addr[128] = {0};
 volatile uint8_t count;
 uint8_t ping_response;
@@ -208,33 +208,33 @@ uint8_t digital_data;
 
 struct
 {
-	uint8_t Target;//Ä¿±ê×´Ì¬,Ö»ÄÜÊÇÈı¶Î
+	uint8_t Target;//ç›®æ ‡çŠ¶æ€,åªèƒ½æ˜¯ä¸‰æ®µ
     uint8_t Turn_times;
     double offset;
 }GWGray;
 
-/* ÉèÖÃÈí¼şIICÇı¶¯ */
+/* è®¾ç½®è½¯ä»¶IICé©±åŠ¨ */
 sw_i2c_interface_t i2c_interface = 
 {
 	.sda_in = sda_in,
 	.scl_out = scl_out,
 	.sda_out = sda_out,
-	.user_data = 0, //ÓÃ»§Êı¾İ£¬¿ÉÔÚÊäÈëÊä³öº¯ÊıÀïµÃµ½
+	.user_data = 0, //ç”¨æˆ·æ•°æ®ï¼Œå¯åœ¨è¾“å…¥è¾“å‡ºå‡½æ•°é‡Œå¾—åˆ°
 };
 
 /*****
- * ÒÆÖ²ÓÚ¸ĞÎª8Â·»Ò¶È´«¸ĞÆ÷Çı¶¯-Èí¼şIIC(¿É¸ù¾İĞèÒª×ÔĞĞ¸ÄÎªÓ²¼şIIC)
- * Ê¹ÓÃIO¿Ú£º´ø5VÈİÈÌµÄPF0(SDA)¡¢PF1(SCL)
+ * ç§»æ¤äºæ„Ÿä¸º8è·¯ç°åº¦ä¼ æ„Ÿå™¨é©±åŠ¨-è½¯ä»¶IIC(å¯æ ¹æ®éœ€è¦è‡ªè¡Œæ”¹ä¸ºç¡¬ä»¶IIC)
+ * ä½¿ç”¨IOå£ï¼šå¸¦5Vå®¹å¿çš„PF0(SDA)ã€PF1(SCL)
 *****/
 void GraySensor_Init(void)
 {
     GPIO_InitTypeDef GPIO_InitStruct;
 
-    //GPIOE¡¢GPIOFÊ±ÖÓ
+    //GPIOEã€GPIOFæ—¶é’Ÿ
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE,ENABLE);
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOF,ENABLE);
 
-    //PF0¡¢PF1Êä³ö¡¢¿ªÂ©¡¢100MHz¡¢ÉÏÀ­
+    //PF0ã€PF1è¾“å‡ºã€å¼€æ¼ã€100MHzã€ä¸Šæ‹‰
     GPIO_InitStruct.GPIO_Pin    = IIC2_SDA|IIC2_SCL;
     GPIO_InitStruct.GPIO_Mode   = GPIO_Mode_OUT;
     GPIO_InitStruct.GPIO_OType  = GPIO_OType_OD;
@@ -244,12 +244,12 @@ void GraySensor_Init(void)
 
     GPIO_SetBits(GPIOF,IIC2_SDA|IIC2_SCL);
 
-	/* µÚÒ»´ÎIICÍ¨Ñ¶»áÊ§°Ü£¨ÒòÎªÈí¼şIIC´¥·¢ÁËstart£©£¬ÊÖ¶¯·¢¸östopÒ²ÄÜÏû³ı */
+	/* ç¬¬ä¸€æ¬¡IICé€šè®¯ä¼šå¤±è´¥ï¼ˆå› ä¸ºè½¯ä»¶IICè§¦å‘äº†startï¼‰ï¼Œæ‰‹åŠ¨å‘ä¸ªstopä¹Ÿèƒ½æ¶ˆé™¤ */
 	sw_i2c_mem_read(&i2c_interface, 0x4C << 1, GW_GRAY_PING, &ping_response, 1);
-	/* ºóÃæIICÍ¨Ñ¶ÊÇÕı³£µÄ */
+	/* åé¢IICé€šè®¯æ˜¯æ­£å¸¸çš„ */
 	sw_i2c_mem_read(&i2c_interface, 0x4C << 1, GW_GRAY_PING, &ping_response, 1);
 	
-	/* É¨Ãè¿ªÊ¼ */
+	/* æ‰«æå¼€å§‹ */
 	count = i2c_scan(&i2c_interface, scan_addr);
 
     GWGray.Target = 0xE7;
@@ -261,41 +261,41 @@ void GraySensor_Init(void)
 float GraySensor_LinePatrol(void)
 {
 	uint32_t i;
-    uint8_t Segments = 1;//¶ÎÊı
-    uint8_t Segments_Length[9]={0};//Ã¿¶ÎµÄ³¤¶È
+    uint8_t Segments = 1;//æ®µæ•°
+    uint8_t Segments_Length[9]={0};//æ¯æ®µçš„é•¿åº¦
     uint8_t L_Target = 0;
     uint8_t R_Target = 0;
 
-    //¶ÁÈ¡¿ª¹ØÁ¿Êı¾İ
-    sw_i2c_read_byte(&i2c_interface, 0x4C << 1, &digital_data); // digital_data ÓĞ1~8ºÅÌ½Í·¿ª¹ØÊı¾İ
-    //°Ñ×Ö½ÚÀïµÄ8¸ö¿ª¹ØÁ¿´æµ½°Ë¸ö±äÁ¿Àï£¬ÕâÀïÎªgray_sensor[0] ~ gray_sensor[7],Ò²¿ÉÒÔÊÇ±äÁ¿val1 ~ val8, ÒòÎªÊÇºê¶¨Òå
+    //è¯»å–å¼€å…³é‡æ•°æ®
+    sw_i2c_read_byte(&i2c_interface, 0x4C << 1, &digital_data); // digital_data æœ‰1~8å·æ¢å¤´å¼€å…³æ•°æ®
+    //æŠŠå­—èŠ‚é‡Œçš„8ä¸ªå¼€å…³é‡å­˜åˆ°å…«ä¸ªå˜é‡é‡Œï¼Œè¿™é‡Œä¸ºgray_sensor[0] ~ gray_sensor[7],ä¹Ÿå¯ä»¥æ˜¯å˜é‡val1 ~ val8, å› ä¸ºæ˜¯å®å®šä¹‰
     SEP_ALL_BIT8(digital_data, 
-        gray_sensor[0], //Ì½Í·1
-        gray_sensor[1], //Ì½Í·2
-        gray_sensor[2], //Ì½Í·3
-        gray_sensor[3], //Ì½Í·4
-        gray_sensor[4], //Ì½Í·5
-        gray_sensor[5], //Ì½Í·6
-        gray_sensor[6], //Ì½Í·7
-        gray_sensor[7]  //Ì½Í·8
+        gray_sensor[0], //æ¢å¤´1
+        gray_sensor[1], //æ¢å¤´2
+        gray_sensor[2], //æ¢å¤´3
+        gray_sensor[3], //æ¢å¤´4
+        gray_sensor[4], //æ¢å¤´5
+        gray_sensor[5], //æ¢å¤´6
+        gray_sensor[6], //æ¢å¤´7
+        gray_sensor[7]  //æ¢å¤´8
     );
 
-    //digital_data µÄ×îµÍÎ»ÊÇÌ½Í·1µÄÊı¾İ£¬digital_data µÄ×î¸ßÎ»ÊÇÌ½Í·8µÄÊı¾İ
-    //Êı¾İÎ»£º8   7   6   5   4   3   2   1
-    //Ì½Í·ºÅ£º8   7   6   5   4   3   2   1
-    //Æ«ÒÆÎ»£ºR3  R2  R1  R0  L0  L1  L2  L3
-/*************************´¦ÀíÊı¾İ*************************/
-    //±éÀú¿ª¹ØÁ¿Êı¾İ£¬µÃµ½¶ÎÊı¡¢¶Î³¤£¬Ö®ºó¾Í¿ÉÒÔÍ¨¹ıÌ½Í·1µÄÑÕÉ«µÃµ½Ã¿¸ö¶ÎµÄÑÕÉ«ºÍ³¤
+    //digital_data çš„æœ€ä½ä½æ˜¯æ¢å¤´1çš„æ•°æ®ï¼Œdigital_data çš„æœ€é«˜ä½æ˜¯æ¢å¤´8çš„æ•°æ®
+    //æ•°æ®ä½ï¼š8   7   6   5   4   3   2   1
+    //æ¢å¤´å·ï¼š8   7   6   5   4   3   2   1
+    //åç§»ä½ï¼šR3  R2  R1  R0  L0  L1  L2  L3
+/*************************å¤„ç†æ•°æ®*************************/
+    //éå†å¼€å…³é‡æ•°æ®ï¼Œå¾—åˆ°æ®µæ•°ã€æ®µé•¿ï¼Œä¹‹åå°±å¯ä»¥é€šè¿‡æ¢å¤´1çš„é¢œè‰²å¾—åˆ°æ¯ä¸ªæ®µçš„é¢œè‰²å’Œé•¿
     for (i = 0; i < 7; i++)
     {
-        //´¦ÀíÊµ¼Ê¿ª¹ØÁ¿Êı¾İ
+        //å¤„ç†å®é™…å¼€å…³é‡æ•°æ®
         if (gray_sensor[i] != gray_sensor[i+1])
             Segments++;
         Segments_Length[Segments]++;
     }
-    //ĞŞÕı±éÀúµÄÊı¾İ
+    //ä¿®æ­£éå†çš„æ•°æ®
     Segments_Length[1]+=1;
-    //´¦ÀíÄ¿±ê¿ª¹ØÁ¿Êı¾İ
+    //å¤„ç†ç›®æ ‡å¼€å…³é‡æ•°æ®
     for (i = 0; i < 8; i++)
     {
         if (((GWGray.Target>>i) & 0x01) != 0)  L_Target++;
@@ -306,35 +306,35 @@ float GraySensor_LinePatrol(void)
         if (((GWGray.Target<<i) & 0x80) != 0) R_Target++;
         else break;
     }
-/*************************Ñ­¼£²¿·Ö*************************/
-    //¼ÆËãÆ«ÒÆÁ¿
+/*************************å¾ªè¿¹éƒ¨åˆ†*************************/
+    //è®¡ç®—åç§»é‡
     if (gray_sensor[0]==1 && Segments == 3)
     {
-        //Ê¹ÓÃÒ»¸ö¼´¿É
+        //ä½¿ç”¨ä¸€ä¸ªå³å¯
         offset_alculation(Segments_Length[1]-L_Target);
         // offset_alculation(Segments_Length[3]-R_Target);
     }
-    //Ã»ÓĞÆ«ÒÆÁ¿Ê±¸üĞÂÖĞĞÄÎ»ÖÃ
+    //æ²¡æœ‰åç§»é‡æ—¶æ›´æ–°ä¸­å¿ƒä½ç½®
     if ((Segments_Length[1]-L_Target) == 0 && (Segments_Length[3]-R_Target) == 0)
     {
         GWGray.offset = 0;
     }
-    //PID¼ÆËã
+    //PIDè®¡ç®—
 	return 0;
 }
 
 /*****
- * Õë¶Ô£¨Segments_Length[1]-L_Target£©¼ÆËãÆ«²î£¬Èç¹ûÊ¹ÓÃµÄÊÇ£¨Segments_Length[3]-R_Target£©£¬ĞèÒªĞŞ¸Ä
+ * é’ˆå¯¹ï¼ˆSegments_Length[1]-L_Targetï¼‰è®¡ç®—åå·®ï¼Œå¦‚æœä½¿ç”¨çš„æ˜¯ï¼ˆSegments_Length[3]-R_Targetï¼‰ï¼Œéœ€è¦ä¿®æ”¹
 *****/
 void offset_alculation(int8_t Gray_offset)
 {
     switch (Gray_offset)
     {
-        /************³µÉíÆ«×ó************/
+        /************è½¦èº«åå·¦************/
         case 3:GWGray.offset-=0.005;Limit_double_Value(&GWGray.offset,-3.2,-2.5);break;
         case 2:GWGray.offset-=0.004;Limit_double_Value(&GWGray.offset,-2.5,-1.2);break;
         case 1:GWGray.offset-=0.003;Limit_double_Value(&GWGray.offset,-1.2,-0.4);break;
-        /************³µÉíÆ«ÓÒ************/
+        /************è½¦èº«åå³************/
         case  -1:GWGray.offset+=0.003;Limit_double_Value(&GWGray.offset,0.4,1.2);break;
         case  -2:GWGray.offset+=0.004;Limit_double_Value(&GWGray.offset,1.2,2.5);break;
         case  -3:GWGray.offset+=0.005;Limit_double_Value(&GWGray.offset,2.5,3.2);break;
@@ -343,18 +343,18 @@ void offset_alculation(int8_t Gray_offset)
 
 
 
-/* ¶¨ÒåsdaÊä³öº¯Êı bit=0ÎªµÍµçÆ½ bit=1Îª¸ßµçÆ½ */
+/* å®šä¹‰sdaè¾“å‡ºå‡½æ•° bit=0ä¸ºä½ç”µå¹³ bit=1ä¸ºé«˜ç”µå¹³ */
 void sda_out(uint8_t bit, void *user_data)
 {
     SDA_OUT;
 
 	GPIO_WriteBit(GPIOF, IIC2_SDA, (BitAction)bit);
 	
-	/* IICÈí¼şÑÓ³Ù */
+	/* IICè½¯ä»¶å»¶è¿Ÿ */
 	delay_us(10);
 }
 
-/* ¶¨Òåsda¶ÁÈ¡º¯Êı bit Îª·µ»ØµÄµçÆ½Öµ */
+/* å®šä¹‰sdaè¯»å–å‡½æ•° bit ä¸ºè¿”å›çš„ç”µå¹³å€¼ */
 uint8_t sda_in(void *user_data)
 {
 	uint8_t bit;
@@ -363,24 +363,24 @@ uint8_t sda_in(void *user_data)
 
 	bit = (uint8_t)GPIO_ReadInputDataBit(GPIOF, IIC2_SDA);
 	
-	/* IICÈí¼şÑÓ³Ù */
+	/* IICè½¯ä»¶å»¶è¿Ÿ */
 	delay_us(10);
 	return bit;
 }
 
-/* ¶¨ÒåsclÊ±ÖÓÊä³öº¯Êı bit=0ÎªµÍµçÆ½ bit=1Îª¸ßµçÆ½ */
+/* å®šä¹‰sclæ—¶é’Ÿè¾“å‡ºå‡½æ•° bit=0ä¸ºä½ç”µå¹³ bit=1ä¸ºé«˜ç”µå¹³ */
 void scl_out(uint8_t bit, void *user_data)
 {
 	GPIO_WriteBit(GPIOF, IIC2_SCL, (BitAction)bit);
 	
-	/* IICÈí¼şÑÓ³Ù */
+	/* IICè½¯ä»¶å»¶è¿Ÿ */
 	delay_us(10);
 }
 
 /**
- * i2cµØÖ·É¨Ãè
- * @param scan_addr É¨Ãè³öÀ´µÄµØÖ·´æ·Å,ÊıÖµ²»Îª0µÄÎªÉ¨Ãèµ½µÄµØÖ·£¬É¨µ½µÄµØÖ·»á°¤¸ö·ÅÔÚÊı×éµÄ×îÇ°Ãæ
- * @return ·µ»ØÉ¨Ãèµ½µÄÉè±¸ÊıÁ¿, 0ÎªÎŞÉè±¸·¢ÏÖ
+ * i2cåœ°å€æ‰«æ
+ * @param scan_addr æ‰«æå‡ºæ¥çš„åœ°å€å­˜æ”¾,æ•°å€¼ä¸ä¸º0çš„ä¸ºæ‰«æåˆ°çš„åœ°å€ï¼Œæ‰«åˆ°çš„åœ°å€ä¼šæŒ¨ä¸ªæ”¾åœ¨æ•°ç»„çš„æœ€å‰é¢
+ * @return è¿”å›æ‰«æåˆ°çš„è®¾å¤‡æ•°é‡, 0ä¸ºæ— è®¾å¤‡å‘ç°
  */
 uint8_t i2c_scan(sw_i2c_interface_t *i2c_interface, uint8_t *scan_addr)
 {

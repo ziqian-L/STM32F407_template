@@ -1,46 +1,46 @@
-#include "pid.h"
+ï»¿#include "pid.h"
 
-/////////////////////////////////////////////Î»ÖÃÊ½PID/////////////////////////////////////////////
+/////////////////////////////////////////////ä½ç½®å¼PID/////////////////////////////////////////////
 /****
- * Î»ÖÃÊ½PID¿ØÖÆ
- * Èë¿Ú²ÎÊı£ºµ±Ç°²âÁ¿Öµ
+ * ä½ç½®å¼PIDæ§åˆ¶
+ * å…¥å£å‚æ•°ï¼šå½“å‰æµ‹é‡å€¼
 ****/
 float Positional_PID_Contorl(PID_TypeDef *PID,float current_value)
 {
-    float Error;    //Æ«²î
-    Error = current_value - PID->SetPoint;  //Æ«²î = µ±Ç°Öµ - Éè¶¨Öµ
-    PID->SumError += Error;                 //Æ«²îµÄ»ı·Ö
-	Limit_float_Value(&(PID->SumError),-3000,3000);	//»ı·ÖÏŞ·ù£¬¸ù¾İĞèÒªµ÷Õû
-    PID->PID_Out =	//¼ÆËãPID
-            PID->Kp * Error +                   //±ÈÀıÏî¼ÆËã
-            PID->Ki * PID->SumError +           //»ı·ÖÏî¼ÆËã
-            PID->Kd * (Error - PID->PrevError); //Î¢·ÖÏî¼ÆËã
-    PID->PrevError = Error;                 //´¢´æÆ«²îÖµ            
+    float Error;    //åå·®
+    Error = current_value - PID->SetPoint;  //åå·® = å½“å‰å€¼ - è®¾å®šå€¼
+    PID->SumError += Error;                 //åå·®çš„ç§¯åˆ†
+	Limit_float_Value(&(PID->SumError),-3000,3000);	//ç§¯åˆ†é™å¹…ï¼Œæ ¹æ®éœ€è¦è°ƒæ•´
+    PID->PID_Out =	//è®¡ç®—PID
+            PID->Kp * Error +                   //æ¯”ä¾‹é¡¹è®¡ç®—
+            PID->Ki * PID->SumError +           //ç§¯åˆ†é¡¹è®¡ç®—
+            PID->Kd * (Error - PID->PrevError); //å¾®åˆ†é¡¹è®¡ç®—
+    PID->PrevError = Error;                 //å‚¨å­˜åå·®å€¼            
     return PID->PID_Out;
 }
 
-/////////////////////////////////////////////ÔöÁ¿Ê½PID/////////////////////////////////////////////
+/////////////////////////////////////////////å¢é‡å¼PID/////////////////////////////////////////////
 /****
- * ÔöÁ¿Ê½PID¿ØÖÆ
- * Èë¿Ú²ÎÊı£ºµ±Ç°²âÁ¿Öµ
+ * å¢é‡å¼PIDæ§åˆ¶
+ * å…¥å£å‚æ•°ï¼šå½“å‰æµ‹é‡å€¼
 ****/
 float Incremental_PID_Contorl(PID_TypeDef *PID,float current_value)
 {
-    float Error;//Æ«²î
-    Error = current_value - PID->SetPoint;  //Æ«²î = µ±Ç°Öµ - Éè¶¨Öµ
-    PID->PID_Out =  //¼ÆËãPID
-        PID->Kp * (Error - PID->PrevError) +                    //±ÈÀıÏî¼ÆËã
-        PID->Ki * Error +                                       //»ı·ÖÏî¼ÆËã
-        PID->Kd * (Error - 2*PID->PrevError + PID->LsatError)   //Î¢·ÖÏî¼ÆËã
+    float Error;//åå·®
+    Error = current_value - PID->SetPoint;  //åå·® = å½“å‰å€¼ - è®¾å®šå€¼
+    PID->PID_Out =  //è®¡ç®—PID
+        PID->Kp * (Error - PID->PrevError) +                    //æ¯”ä¾‹é¡¹è®¡ç®—
+        PID->Ki * Error +                                       //ç§¯åˆ†é¡¹è®¡ç®—
+        PID->Kd * (Error - 2*PID->PrevError + PID->LsatError)   //å¾®åˆ†é¡¹è®¡ç®—
     + PID->PID_Out;
-    PID->LsatError = PID->PrevError;    //´æ´¢ÉÏÉÏ´ÎµÄÆ«²î
-    PID->PrevError = Error;             //´æ´¢ÉÏ´ÎµÄÆ«²î
+    PID->LsatError = PID->PrevError;    //å­˜å‚¨ä¸Šä¸Šæ¬¡çš„åå·®
+    PID->PrevError = Error;             //å­˜å‚¨ä¸Šæ¬¡çš„åå·®
     return PID->PID_Out;
 }
 
 /****
- * ĞŞ¸Ä±àÂëÆ÷µÄÄ¿±êËÙ¶È
- * Èë¿Ú²ÎÊı£º±àÂëÆ÷AµÄÄ¿±êËÙ¶È£¬±àÂëÆ÷BµÄÄ¿±êËÙ¶È
+ * ä¿®æ”¹ç¼–ç å™¨çš„ç›®æ ‡é€Ÿåº¦
+ * å…¥å£å‚æ•°ï¼šç¼–ç å™¨Açš„ç›®æ ‡é€Ÿåº¦ï¼Œç¼–ç å™¨Bçš„ç›®æ ‡é€Ÿåº¦
 ****/
 void PID_Encoders_SetPoint(float Left_Wheel_speed, float Right_Wheel_speed)
 {
@@ -48,25 +48,25 @@ void PID_Encoders_SetPoint(float Left_Wheel_speed, float Right_Wheel_speed)
     PID_Right.SetPoint = Right_Wheel_speed;
 }
 
-/*******************************************PID²ÎÊı³õÊ¼»¯*******************************************/
+/*******************************************PIDå‚æ•°åˆå§‹åŒ–*******************************************/
 void PID_Init(void)
 {
 
-    //µç»úA¡¢B±àÂëÆ÷¿ØËÙPID
+    //ç”µæœºAã€Bç¼–ç å™¨æ§é€ŸPID
     PID_Left.Kp = PID_Right.Kp = -600;
     PID_Left.Ki = PID_Right.Ki = -3;
     PID_Left.Kd = PID_Right.Kd = -30;
-    //±àÂëÆ÷A¡¢BµÄÄ¿±êËÙ¶ÈÎª0
+    //ç¼–ç å™¨Aã€Bçš„ç›®æ ‡é€Ÿåº¦ä¸º0
     PID_Encoders_SetPoint(0,0);
 }
 void PID_Release(void)
 {
-	//Ñ­¼£PID
+	//å¾ªè¿¹PID
 }
-/*******************************************PID²ÎÊı*******************************************/
+/*******************************************PIDå‚æ•°*******************************************/
 /****
- * ĞŞ¸ÄÄ³¸öPIDµÄ±ÈÀıÏµÊı£¬»ı·ÖÏµÊı£¬Î¢·ÖÏµÊı
- * Èë¿Ú²ÎÊı£ºPID£¬±ÈÀıÏµÊı£¬»ı·ÖÏµÊı£¬Î¢·ÖÏµÊı
+ * ä¿®æ”¹æŸä¸ªPIDçš„æ¯”ä¾‹ç³»æ•°ï¼Œç§¯åˆ†ç³»æ•°ï¼Œå¾®åˆ†ç³»æ•°
+ * å…¥å£å‚æ•°ï¼šPIDï¼Œæ¯”ä¾‹ç³»æ•°ï¼Œç§¯åˆ†ç³»æ•°ï¼Œå¾®åˆ†ç³»æ•°
 ****/
 void PID_modify(PID_TypeDef *PID, float Kp, float Ki, float Kd)
 {
@@ -79,12 +79,12 @@ void SetPoint_modify(PID_TypeDef *PID,float SetPoint)
     PID->SetPoint = SetPoint;
 }
 
-/*******************************************ÆäËû*******************************************/
+/*******************************************å…¶ä»–*******************************************/
 /******
- * ÏŞ·ù£¬·ù¶ÈÓÉ×Ô¼ºÈ·¶¨
- * *num£ºÖ¸Ïò±äÁ¿µÄÖ¸Õë
- * Limit_Min£º×îĞ¡Öµ
- * Limit_Max£º×î´óÖµ
+ * é™å¹…ï¼Œå¹…åº¦ç”±è‡ªå·±ç¡®å®š
+ * *numï¼šæŒ‡å‘å˜é‡çš„æŒ‡é’ˆ
+ * Limit_Minï¼šæœ€å°å€¼
+ * Limit_Maxï¼šæœ€å¤§å€¼
 *****/
 void Limit_float_Value(float *num, float Limit_Min, float Limit_Max)
 {

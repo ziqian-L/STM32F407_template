@@ -1,38 +1,38 @@
-#include "matrixkey.h"
+ï»¿#include "matrixkey.h"
 
 uint8_t KEY;
 
 /******
- * ¾ØÕó¼üÅÌ³õÊ¼»¯(CH451L)
- * ´®ÐÐÊý¾ÝÊä³öÏßDOUT : PE13£¬¼üÅÌÖÐ¶Ï¡¢Êý¾ÝÊä³ö¡£
- * ´®ÐÐÊý¾Ý¼ÓÔØÏßLOAD : PE11£¬ÉÏÉýÑØ¼ÓÔØ12Î»ÃüÁî¡£
- * ´®ÐÐÊý¾ÝÊäÈëÏßDIN  : PE9£¬¼ÓÔØÃüÁî¸øCH451L¡£ÔÚ¸´Î»ºó£¬ÔÚDCLKÖ®Ç°Êä³öµÍµçÆ½Âö³å(¸ß->µÍ->¸ß)ÒÔÊ¹ÄÜ4Ïß´®ÐÐ½Ó¿Ú¡£
- * ´®ÐÐÊý¾ÝÊ±ÖÓÏßDCLK : PE7£¬¼ÓÔØÃüÁîÊ±£¬ÔÚÃ¿¸öÉÏÉýÑØ¼ÓÔØÊý¾Ý¸øDIN¡£Êä³öÊý¾ÝÊ±£¬ÔÚÃ¿¸öÏÂ½µÑØÊä³öÊý¾Ý¡£
+ * çŸ©é˜µé”®ç›˜åˆå§‹åŒ–(CH451L)
+ * ä¸²è¡Œæ•°æ®è¾“å‡ºçº¿DOUT : PE13ï¼Œé”®ç›˜ä¸­æ–­ã€æ•°æ®è¾“å‡ºã€‚
+ * ä¸²è¡Œæ•°æ®åŠ è½½çº¿LOAD : PE11ï¼Œä¸Šå‡æ²¿åŠ è½½12ä½å‘½ä»¤ã€‚
+ * ä¸²è¡Œæ•°æ®è¾“å…¥çº¿DIN  : PE9ï¼ŒåŠ è½½å‘½ä»¤ç»™CH451Lã€‚åœ¨å¤ä½åŽï¼Œåœ¨DCLKä¹‹å‰è¾“å‡ºä½Žç”µå¹³è„‰å†²(é«˜->ä½Ž->é«˜)ä»¥ä½¿èƒ½4çº¿ä¸²è¡ŒæŽ¥å£ã€‚
+ * ä¸²è¡Œæ•°æ®æ—¶é’Ÿçº¿DCLK : PE7ï¼ŒåŠ è½½å‘½ä»¤æ—¶ï¼Œåœ¨æ¯ä¸ªä¸Šå‡æ²¿åŠ è½½æ•°æ®ç»™DINã€‚è¾“å‡ºæ•°æ®æ—¶ï¼Œåœ¨æ¯ä¸ªä¸‹é™æ²¿è¾“å‡ºæ•°æ®ã€‚
 ******/
 void Matrix_Key_Init(void)
 {
-    //GPIOEÊ±ÖÓ³õÊ¼»¯
+    //GPIOEæ—¶é’Ÿåˆå§‹åŒ–
     RCC->AHB1ENR |= RCC_AHB1ENR_GPIOEEN;
-    //PE13:ÆÕÍ¨ÊäÈëÄ£Ê½¡¢ÍìÍÆ¡¢100MHz¡¢ÉÏÀ­
+    //PE13:æ™®é€šè¾“å…¥æ¨¡å¼ã€æŒ½æŽ¨ã€100MHzã€ä¸Šæ‹‰
     GPIOE->MODER    |= 0x00;
     GPIOE->OTYPER   |= 0x00;
     GPIOE->OSPEEDR  |= GPIO_OSPEEDER_OSPEEDR13;
     GPIOE->PUPDR    |= GPIO_PUPDR_PUPDR13_0;
-    //PE11¡¢PE9¡¢PE7:Í¨ÓÃÊä³öÄ£Ê½¡¢ÍìÍÆ¡¢100MHz¡¢ÉÏÀ­
+    //PE11ã€PE9ã€PE7:é€šç”¨è¾“å‡ºæ¨¡å¼ã€æŒ½æŽ¨ã€100MHzã€ä¸Šæ‹‰
     GPIOE->MODER    |= GPIO_OSPEEDER_OSPEEDR11_0|GPIO_OSPEEDER_OSPEEDR9_0|GPIO_OSPEEDER_OSPEEDR7_0;
     GPIOE->OTYPER   |= 0x00;
     GPIOE->OSPEEDR  |= GPIO_OSPEEDER_OSPEEDR11|GPIO_OSPEEDER_OSPEEDR9|GPIO_OSPEEDER_OSPEEDR7;
     GPIOE->PUPDR    |= GPIO_PUPDR_PUPDR11_0|GPIO_PUPDR_PUPDR9_0|GPIO_PUPDR_PUPDR7_0;
-    //Íâ²¿ÖÐ¶Ï
-    //GPIOE13 Á¬½Óµ½ÖÐ¶ÏÏß 13
+    //å¤–éƒ¨ä¸­æ–­
+    //GPIOE13 è¿žæŽ¥åˆ°ä¸­æ–­çº¿ 13
     RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
     SYSCFG->EXTICR[3] |= SYSCFG_EXTICR4_EXTI13_PE;
-    //ÖÐ¶ÏÏß 13 ÏÂ½µÑØ´¥·¢
+    //ä¸­æ–­çº¿ 13 ä¸‹é™æ²¿è§¦å‘
     EXTI->IMR   |= (1<<13);
     EXTI->FTSR  |= (1<<13);
-	//ÅäÖÃÖÐ¶ÏÓÅÏÈ¼¶
+	//é…ç½®ä¸­æ–­ä¼˜å…ˆçº§
 	MY_NVIC_Init(EXTI15_10_IRQn,1,1);
-    //CH451L³õÊ¼»¯,DINÊä³öµÍµçÆ½Âö³å,À­¸ßDCLK¡¢LOAD
+    //CH451Låˆå§‹åŒ–,DINè¾“å‡ºä½Žç”µå¹³è„‰å†²,æ‹‰é«˜DCLKã€LOAD
     DIN  = 0;
     DIN  = 1;
     DCLK = 1;
@@ -41,7 +41,7 @@ void Matrix_Key_Init(void)
 }
 
 /******
- * ¾ØÕó¼üÅÌÐ´ÃüÁî(CH451L)
+ * çŸ©é˜µé”®ç›˜å†™å‘½ä»¤(CH451L)
 ******/
 void Matrix_Key_Writer(uint16_t command)
 {
@@ -58,7 +58,7 @@ void Matrix_Key_Writer(uint16_t command)
 }
 
 /******
- * ¾ØÕó¼üÅÌ¼üÖµÅÐ¶Ï(CH451L)
+ * çŸ©é˜µé”®ç›˜é”®å€¼åˆ¤æ–­(CH451L)
 ******/
 void Matrix_Key_Data(uint8_t *key)
 {
@@ -85,7 +85,7 @@ void Matrix_Key_Data(uint8_t *key)
 }
 
 /******
- * ¾ØÕó¼üÅÌÖÐ¶Ï(CH451L)
+ * çŸ©é˜µé”®ç›˜ä¸­æ–­(CH451L)
 ******/
 void EXTI15_10_IRQHandler(void)
 {

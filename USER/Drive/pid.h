@@ -1,4 +1,4 @@
-#ifndef __PID_H
+ï»¿#ifndef __PID_H
 #define __PID_H
 
 #include "sys.h"
@@ -9,10 +9,10 @@ typedef struct
     float Ki;
     float Kd;
     float PID_Out;
-    float SetPoint;  // Éè¶¨µã
-    float PrevError; // ÉÏÒ»´ÎµÄÆ«²î
-    float SumError;  // Îó²îµÄ»ı·Ö
-    float LsatError; // ×îºóµÄÆ«²î
+    float SetPoint;  // è®¾å®šç‚¹
+    float PrevError; // ä¸Šä¸€æ¬¡çš„åå·®
+    float SumError;  // è¯¯å·®çš„ç§¯åˆ†
+    float LsatError; // æœ€åçš„åå·®
 } PID_TypeDef;
 
 extern PID_TypeDef PID_Left,PID_Right;

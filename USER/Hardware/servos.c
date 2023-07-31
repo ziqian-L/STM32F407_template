@@ -1,63 +1,63 @@
-#include "servos.h"
+ï»¿#include "servos.h"
 
-/****************¶æ»ú²ÎÊı³õÊ¼»¯****************/
-/*******Õë¶Ô²»Í¬µÄ¶æ»úÅäÖÃ²»Í¬µÄPWMÊä³ö*******/
+/****************èˆµæœºå‚æ•°åˆå§‹åŒ–****************/
+/*******é’ˆå¯¹ä¸åŒçš„èˆµæœºé…ç½®ä¸åŒçš„PWMè¾“å‡º*******/
 /**********
- * ¶æ»ú1½Ç¶È£º		-90     -45      0       45      90       
- * ×Ô¶¯ÖØ×°ÔØÖµ£º	530   1013.75  1497.5  1981.25  2465
+ * èˆµæœº1è§’åº¦ï¼š		-90     -45      0       45      90       
+ * è‡ªåŠ¨é‡è£…è½½å€¼ï¼š	530   1013.75  1497.5  1981.25  2465
 **********/
 Server_Typedef Server1 =
 {
-	.TIM_CH=1,			//¶¨Ê±Æ÷Í¨µÀ(TIM12_CH1(PB14))
-	.PWM_Limit_Min=350,	//¶æ»ú×îĞ¡PWMÖµ
-	.PWM_Limit_Max=2679,//¶æ»ú×î´óPWMÖµ
-	.PWM_Angle_Min=590,	//¶æ»ú0¶ÈPWMÖµ
-	.PWM_Angle_Max=2530,//¶æ»ú180/270¶ÈÊ±PWMÖµ
-	.Angle=180,			//¶æ»ú±ê×¼½Ç¶È·¶Î§,180/270
-	.Angle_MIN=0,		//ÏŞ·ù×îĞ¡½Ç¶ÈÖµ
-	.Angle_MAX=180		//ÏŞ·ù×î´ó½Ç¶ÈÖµ
+	.TIM_CH=1,			//å®šæ—¶å™¨é€šé“(TIM12_CH1(PB14))
+	.PWM_Limit_Min=350,	//èˆµæœºæœ€å°PWMå€¼
+	.PWM_Limit_Max=2679,//èˆµæœºæœ€å¤§PWMå€¼
+	.PWM_Angle_Min=590,	//èˆµæœº0åº¦PWMå€¼
+	.PWM_Angle_Max=2530,//èˆµæœº180/270åº¦æ—¶PWMå€¼
+	.Angle=180,			//èˆµæœºæ ‡å‡†è§’åº¦èŒƒå›´,180/270
+	.Angle_MIN=0,		//é™å¹…æœ€å°è§’åº¦å€¼
+	.Angle_MAX=180		//é™å¹…æœ€å¤§è§’åº¦å€¼
 };
 /**********
- * ¶æ»ú2½Ç¶È£º		-90     -45      0       45      90       
- * ×Ô¶¯ÖØ×°ÔØÖµ£º	530   1013.75  1497.5  1981.25  2465
+ * èˆµæœº2è§’åº¦ï¼š		-90     -45      0       45      90       
+ * è‡ªåŠ¨é‡è£…è½½å€¼ï¼š	530   1013.75  1497.5  1981.25  2465
 **********/
 Server_Typedef Server2 =
 {
-	.TIM_CH=2,			//¶¨Ê±Æ÷Í¨µÀ(TIM12_CH2(PB15))
-	.PWM_Limit_Min=341,	//¶æ»ú×îĞ¡PWMÖµ
-	.PWM_Limit_Max=2678,//¶æ»ú×î´óPWMÖµ
-	.PWM_Angle_Min=580,	//¶æ»ú0¶ÈPWMÖµ
-	.PWM_Angle_Max=2500,//¶æ»ú180/270¶ÈÊ±PWMÖµ
-	.Angle=180,			//¶æ»ú±ê×¼½Ç¶È·¶Î§,180/270
-	.Angle_MIN=0,		//ÏŞ·ù×îĞ¡½Ç¶ÈÖµ
-	.Angle_MAX=180		//ÏŞ·ù×î´ó½Ç¶ÈÖµ
+	.TIM_CH=2,			//å®šæ—¶å™¨é€šé“(TIM12_CH2(PB15))
+	.PWM_Limit_Min=341,	//èˆµæœºæœ€å°PWMå€¼
+	.PWM_Limit_Max=2678,//èˆµæœºæœ€å¤§PWMå€¼
+	.PWM_Angle_Min=580,	//èˆµæœº0åº¦PWMå€¼
+	.PWM_Angle_Max=2500,//èˆµæœº180/270åº¦æ—¶PWMå€¼
+	.Angle=180,			//èˆµæœºæ ‡å‡†è§’åº¦èŒƒå›´,180/270
+	.Angle_MIN=0,		//é™å¹…æœ€å°è§’åº¦å€¼
+	.Angle_MAX=180		//é™å¹…æœ€å¤§è§’åº¦å€¼
 };
-/******************************************¶æ»úÏà¹Ø******************************************/
+/******************************************èˆµæœºç›¸å…³******************************************/
 
 /**********
- * ¶æ»ú³õÊ¼»¯
- * TIM12_CH1(PB14)¡¢TIM12_CH2(PB15)
+ * èˆµæœºåˆå§‹åŒ–
+ * TIM12_CH1(PB14)ã€TIM12_CH2(PB15)
 **********/
 void Servos_Init(void)
 {
-/***************¶æ»úPWMÊä³ö³õÊ¼»¯***************/
-    //¿ªÆôÊ±ÖÓ
+/***************èˆµæœºPWMè¾“å‡ºåˆå§‹åŒ–***************/
+    //å¼€å¯æ—¶é’Ÿ
     RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
     RCC->APB1ENR |= RCC_APB1ENR_TIM12EN;
-    //¸´ÓÃ¡¢ÍìÍÆ¡¢100MHz¡¢ÏÂÀ­
+    //å¤ç”¨ã€æŒ½æ¨ã€100MHzã€ä¸‹æ‹‰
     GPIOB->MODER    |= GPIO_MODER_MODER14_1|GPIO_MODER_MODER15_1;
     GPIOB->OTYPER   |= 0x00;
     GPIOB->OSPEEDR  |= GPIO_OSPEEDER_OSPEEDR14|GPIO_OSPEEDER_OSPEEDR15;
     GPIOB->PUPDR    |= GPIO_PUPDR_PUPDR14_1|GPIO_PUPDR_PUPDR15_1;
-    //GPIO¸´ÓÃ
+    //GPIOå¤ç”¨
     GPIO_PinAFConfig(GPIOB,GPIO_PinSource14,GPIO_AF_TIM12);
 	GPIO_PinAFConfig(GPIOB,GPIO_PinSource15,GPIO_AF_TIM12);
-    //³õÊ¼»¯Ê±»ùµ¥Ôª(20ms)
+    //åˆå§‹åŒ–æ—¶åŸºå•å…ƒ(20ms)
     TIM12->CR1 |= 0<<4;
     TIM12->CR1 |= 0<<8;
     TIM12->PSC = 84-1;
     TIM12->ARR = 20000-1;
-    //PWM1Ä£Ê½,Ê¹ÄÜÊä³ö±È½Ï¡¢Êä³ö±È½Ï¼«ĞÔÎªµÍ,Êä³ö±È½ÏµÄÔ¤×°ÔØÖµ,Ê¹ÄÜÔ¤×°ÔØ¼Ä´æÆ÷,Ê¹ÄÜ×Ô¶¯ÖØ×°ÔØµÄÔ¤×°ÔØ¼Ä´æÆ÷ÔÊĞíÎ»
+    //PWM1æ¨¡å¼,ä½¿èƒ½è¾“å‡ºæ¯”è¾ƒã€è¾“å‡ºæ¯”è¾ƒææ€§ä¸ºä½,è¾“å‡ºæ¯”è¾ƒçš„é¢„è£…è½½å€¼,ä½¿èƒ½é¢„è£…è½½å¯„å­˜å™¨,ä½¿èƒ½è‡ªåŠ¨é‡è£…è½½çš„é¢„è£…è½½å¯„å­˜å™¨å…è®¸ä½
     TIM12->CCMR1 |= (TIM_CCMR1_OC1M_2 | TIM_CCMR1_OC1M_1 | TIM_CCMR1_OC2M_2 | TIM_CCMR1_OC2M_1);
     TIM12->CCER  |= (TIM_CCER_CC1E | 0x00 | TIM_CCER_CC2E | 0x00);
     TIM12->CCR1  |= 0x00;
@@ -65,12 +65,12 @@ void Servos_Init(void)
     TIM12->CCMR1 |= TIM_CCMR1_OC1PE | TIM_CCMR1_OC2PE;
     TIM12->CR1 |= TIM_CR1_ARPE;
 
-    //Ê¹ÄÜ¶¨Ê±Æ÷
+    //ä½¿èƒ½å®šæ—¶å™¨
     TIM12->CR1 |= 1<<0;
 }
 
 /**********
- * ¶æ»ú½Ç¶ÈÏŞ·ù
+ * èˆµæœºè§’åº¦é™å¹…
 **********/
 void servos_angle_limit(Server_Typedef* servos,float *angle)
 {
@@ -79,22 +79,22 @@ void servos_angle_limit(Server_Typedef* servos,float *angle)
 }
 
 /**********
- * ¶æ»ú½Ç¶ÈĞŞ¸Ä
+ * èˆµæœºè§’åº¦ä¿®æ”¹
 **********/
 void servos_angle(Server_Typedef* servos,TIM_TypeDef* TIMx,float angle)
 {
     float angle_compare = 0;
-	//ÏŞ·ù
+	//é™å¹…
 	servos_angle_limit(servos,&angle);
-	//¼ÆËãPWM
+	//è®¡ç®—PWM
     angle_compare = (float)(servos->PWM_Angle_Max - servos->PWM_Angle_Min)*(float)(angle/servos->Angle);
     angle_compare += servos->PWM_Angle_Min;
-	//Êä³öPWM
+	//è¾“å‡ºPWM
     TIM_SetComparex(TIMx,angle_compare,servos->TIM_CH);
 }
 
 /**********
- * ¶æ»ú1½Ç¶ÈĞŞ¸Ä
+ * èˆµæœº1è§’åº¦ä¿®æ”¹
 **********/
 void Servos1_Angle(float angle)
 {
@@ -102,7 +102,7 @@ void Servos1_Angle(float angle)
 }
 
 /**********
- * ¶æ»ú2½Ç¶ÈĞŞ¸Ä
+ * èˆµæœº2è§’åº¦ä¿®æ”¹
 **********/
 void Servos2_Angle(float angle)
 {
@@ -110,7 +110,7 @@ void Servos2_Angle(float angle)
 }
 
 /**********
- * ¶şÎ¬ÔÆÌ¨½Ç¶ÈĞŞ¸Ä
+ * äºŒç»´äº‘å°è§’åº¦ä¿®æ”¹
 **********/
 void gimbal_angle(float Server1_angle,float Server2_angle)
 {

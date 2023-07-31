@@ -1,17 +1,17 @@
-#ifndef __KEY_H
+ï»¿#ifndef __KEY_H
 #define __KEY_H
 #include "sys.h"
 
-/*ÏÂÃæ·½Ê½ÊÇÍ¨¹ıÎ»´ø²Ù×÷·½Ê½¶ÁÈ¡IO*/
+/*ä¸‹é¢æ–¹å¼æ˜¯é€šè¿‡ä½å¸¦æ“ä½œæ–¹å¼è¯»å–IO*/
 #define KEY0    PEin(4) // PE4
 #define KEY1    PEin(3) // PE3
 #define WK_UP   PAin(0) // PA0
 
-#define KEY0_PRES 1 // KEY0°´ÏÂ
-#define KEY1_PRES 2 // KEY1°´ÏÂ
-#define WKUP_PRES 3 // KEY_UP°´ÏÂ(¼´WK_UP)
+#define KEY0_PRES 1 // KEY0æŒ‰ä¸‹
+#define KEY1_PRES 2 // KEY1æŒ‰ä¸‹
+#define WKUP_PRES 3 // KEY_UPæŒ‰ä¸‹(å³WK_UP)
 
-void KEY_Init(void);  // °´¼üIO³õÊ¼»¯
-u8 KEY_Scan(u8 mode); // °´¼üÉ¨Ãèº¯Êı
+void KEY_Init(void);  // æŒ‰é”®IOåˆå§‹åŒ–
+u8 KEY_Scan(u8 mode); // æŒ‰é”®æ‰«æå‡½æ•°
 uint8_t KEY_Scan_(void);
 #endif

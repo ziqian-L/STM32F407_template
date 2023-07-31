@@ -1,4 +1,4 @@
-#include "delay.h"
+ï»¿#include "delay.h"
 #include "usart.h"
 #include "motor.h"
 #include "encoder.h"
@@ -16,59 +16,59 @@
 #include "matrixkey.h"
 #include "mlx90614.h"
 /*****
- * ×óµç»ú£º
- *      ±àÂëÆ÷£ºTIM3_CH1(PB4)¡¢TIM3_CH2(PB5)
- *      PWMÊä³ö£ºTIM8_CH1(PC6)
- *      Õý·´×ª£ºPG7¡¢PG5
- * ÓÒµç»ú£º
- *      ±àÂëÆ÷£ºTIM4_CH1(PB6)¡¢TIM4_CH2(PB7)
- *      PWMÊä³ö£ºTIM8_CH2(PC7)
- *      Õý·´×ª£ºPG8¡¢PG6
- * ·äÃùÆ÷£ºPE10
- * OLED£ºBack½Ó·¨
- * ¶æ»ú/¶þÎ¬ÔÆÌ¨£º
- * 		¶æ»ú1£ºTIM12_CH1(PB14)
- * 		¶æ»ú2£ºTIM12_CH2(PB15)
- * ³¬Éù²¨£ºPC12(UART5_TX)¡¢PD2(UART5_RX)
- * ¸ÐÎª8Â·»Ò¶È£º´ø5VÈÝÈÌµÄPF0(SDA)¡¢PF1(SCL)
- * À¶ÑÀ/2.4G£ºPA2(USART2_TX)¡¢PA3(USART2_RX)
- * MPU6050£ºPC1(SCL)¡¢PC2(SDA)
- * CH451L£ºPE13(DOUT)¡¢PE11(LOAD)¡¢PE9(DIN)¡¢PE7(DCLK)
- * MLX90614£ºPE14(SDA)¡¢PE15(SCL)*²»¿ÉÓÃ
+ * å·¦ç”µæœºï¼š
+ *      ç¼–ç å™¨ï¼šTIM3_CH1(PB4)ã€TIM3_CH2(PB5)
+ *      PWMè¾“å‡ºï¼šTIM8_CH1(PC6)
+ *      æ­£åè½¬ï¼šPG7ã€PG5
+ * å³ç”µæœºï¼š
+ *      ç¼–ç å™¨ï¼šTIM4_CH1(PB6)ã€TIM4_CH2(PB7)
+ *      PWMè¾“å‡ºï¼šTIM8_CH2(PC7)
+ *      æ­£åè½¬ï¼šPG8ã€PG6
+ * èœ‚é¸£å™¨ï¼šPE10
+ * OLEDï¼šBackæŽ¥æ³•
+ * èˆµæœº/äºŒç»´äº‘å°ï¼š
+ * 		èˆµæœº1ï¼šTIM12_CH1(PB14)
+ * 		èˆµæœº2ï¼šTIM12_CH2(PB15)
+ * è¶…å£°æ³¢ï¼šPC12(UART5_TX)ã€PD2(UART5_RX)
+ * æ„Ÿä¸º8è·¯ç°åº¦ï¼šå¸¦5Vå®¹å¿çš„PF0(SDA)ã€PF1(SCL)
+ * è“ç‰™/2.4Gï¼šPA2(USART2_TX)ã€PA3(USART2_RX)
+ * MPU6050ï¼šPC1(SCL)ã€PC2(SDA)
+ * CH451Lï¼šPE13(DOUT)ã€PE11(LOAD)ã€PE9(DIN)ã€PE7(DCLK)
+ * MLX90614ï¼šPE14(SDA)ã€PE15(SCL)*ä¸å¯ç”¨,å’ŒOLEDçš„IOå£å†²çª
 *****/
 
 int main(void)
 {
 	static uint8_t status=0;
 	uint8_t i,j;
-	/*ÏµÍ³³õÊ¼»¯*/
-    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//ÖÐ¶ÏÓÅÏÈ¼¶·Ö×é
-    delay_init(168);//ÑÓÊ±³õÊ¼»¯
-	USART1_Init(115200);//´®¿Ú1
-	USART2_Init(115200);//´®¿Ú2
-	RingBuff_Init(&Uart2_RingBuff);//´®¿Ú2»·ÐÎ»º³åÇø
-	/*°åÔØÍâÉè³õÊ¼»¯*/
+	/*ç³»ç»Ÿåˆå§‹åŒ–*/
+    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//ä¸­æ–­ä¼˜å…ˆçº§åˆ†ç»„
+    delay_init(168);//å»¶æ—¶åˆå§‹åŒ–
+	USART1_Init(115200);//ä¸²å£1
+	USART2_Init(115200);//ä¸²å£2
+	RingBuff_Init(&Uart2_RingBuff);//ä¸²å£2çŽ¯å½¢ç¼“å†²åŒº
+	/*æ¿è½½å¤–è®¾åˆå§‹åŒ–*/
 	LED_Init();
 	KEY_Init();
-	/*Ä£¿é³õÊ¼»¯*/
-	Buzz_Init();//·äÃùÆ÷
-	Buzz(1);//¹Ø±Õ·äÃùÆ÷
-	OLED_Init();//OLED³õÊ¼»¯
-	Servos_Init();//¶æ»ú
-	Ultrasound_Init();//³¬Éù²¨
-	GraySensor_Init();//»Ò¶È´«¸ÐÆ÷
-//	MPU_Init();//MPU6050³õÊ¼»¯
-//	DMP_Init();//DMP³õÊ¼»¯
-	Matrix_Key_Init();//CH451L¾ØÕó¼üÅÌ
+	/*æ¨¡å—åˆå§‹åŒ–*/
+	Buzz_Init();//èœ‚é¸£å™¨
+	Buzz(1);//å…³é—­èœ‚é¸£å™¨
+	OLED_Init();//OLEDåˆå§‹åŒ–
+	Servos_Init();//èˆµæœº
+	Ultrasound_Init();//è¶…å£°æ³¢
+	GraySensor_Init();//ç°åº¦ä¼ æ„Ÿå™¨
+//	MPU_Init();//MPU6050åˆå§‹åŒ–
+//	DMP_Init();//DMPåˆå§‹åŒ–
+	Matrix_Key_Init();//CH451LçŸ©é˜µé”®ç›˜
 	Temperature_measure_Init();//MLX90614
-	/*¿ØÖÆ³õÊ¼»¯*/
+	/*æŽ§åˆ¶åˆå§‹åŒ–*/
 	PID_Init();
-	Motor_drive_Init();//Õý·´×ª
-	TIM8_PWM_Init(168-1,7200-1);//PWMÊä³ö
-	TIM3_Encoder_Init();//×óµç»ú±àÂëÆ÷
-	TIM4_Encoder_Init();//ÓÒµç»ú±àÂëÆ÷
-//	TIM9_Timed_Interrupt(168-1,5000);//¶¨Ê±ÖÐ¶Ï
-	TIM6_init();//¶¨Ê±Æ÷ÑÓÊ±³õÊ¼»¯
+	Motor_drive_Init();//æ­£åè½¬
+	TIM8_PWM_Init(168-1,7200-1);//PWMè¾“å‡º
+	TIM3_Encoder_Init();//å·¦ç”µæœºç¼–ç å™¨
+	TIM4_Encoder_Init();//å³ç”µæœºç¼–ç å™¨
+	TIM9_Timed_Interrupt(168-1,5000);//å®šæ—¶ä¸­æ–­
+	TIM6_init();//å®šæ—¶å™¨å»¶æ—¶åˆå§‹åŒ–
     PID_Encoders_SetPoint(0,0);
 	gimbal_angle(90,90);
 	delay_ms(300);
@@ -86,7 +86,7 @@ int main(void)
 //		OLED_ShowFNum(0,0,Left_Wheel_speed,5,16,1);
 //		OLED_ShowFNum(64,0,Right_Wheel_speed,5,16,1);
 //		OLED_Refresh();
-//		//LED½»ÌæÉÁË¸
+//		//LEDäº¤æ›¿é—ªçƒ
 //		if(status==0)
 //		{
 //			LED0=0;

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  $License:
     Copyright (C) 2011-2012 InvenSense Corporation, All Rights Reserved.
     See included License.txt for License information.
@@ -26,7 +26,7 @@
 #include "usart.h"
 #include "delay.h"
 
-//¶¨ÒåÄ¿±ê°å²ÉÓÃMSP430
+//å®šä¹‰ç›®æ ‡æ¿é‡‡ç”¨MSP430
 #define  MOTION_DRIVER_TARGET_MSP430
 
 /* The following functions must be defined for this platform:

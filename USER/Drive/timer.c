@@ -1,13 +1,13 @@
-#include "timer.h"
+ï»¿#include "timer.h"
 
 volatile uint8_t timeout = 0;
 
-void TIM6_init(void)//»ù±¾¶¨Ê±Æ÷
+void TIM6_init(void)//åŸºæœ¬å®šæ—¶å™¨
 {
-	TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure = {0};//¼ÆÊ±
+	TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure = {0};//è®¡æ—¶
 	NVIC_InitTypeDef NVIC_InitStructure = {0};
 	
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6,ENABLE);//APB1:42Mhz ¶¨Ê±Æ÷6£º84Mhz/8400 = 10Khz  0.0001s/count  6s
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6,ENABLE);//APB1:42Mhz å®šæ—¶å™¨6ï¼š84Mhz/8400 = 10Khz  0.0001s/count  6s
 	
 	TIM_TimeBaseInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
 	TIM_TimeBaseInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
@@ -38,12 +38,12 @@ void set_time(uint16_t time)
 
 void TIM6_DAC_IRQHandler(void)
 {
-	if(TIM_GetITStatus(TIM6,TIM_IT_Update)==SET) //Òç³öÖĞ¶Ï
+	if(TIM_GetITStatus(TIM6,TIM_IT_Update)==SET) //æº¢å‡ºä¸­æ–­
 	{
 		timeout = 1;
 		TIM_Cmd(TIM6, DISABLE);
 		TIM_SetCounter(TIM6, 0);
 	}
-	TIM_ClearITPendingBit(TIM6,TIM_IT_Update); //Çå³ıÖĞ¶Ï±êÖ¾Î»
+	TIM_ClearITPendingBit(TIM6,TIM_IT_Update); //æ¸…é™¤ä¸­æ–­æ ‡å¿—ä½
 }
 

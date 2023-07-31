@@ -1,11 +1,11 @@
-#ifndef __GRAYSENSOR_H
+﻿#ifndef __GRAYSENSOR_H
 #define __GRAYSENSOR_H
 
 #include "sys.h"
 #include "sw_i2c.h"
 #include "gw_grayscale_sensor.h"
 
-//ѡ��ʹ��5·�Ҷȴ��������Ǹ�Ϊ��8·�Ҷȴ������������к�IIC��
+//选择使用5路灰度传感器还是感为的8路灰度传感器（带串行和IIC）
 #define GW_GraySensor
 
 

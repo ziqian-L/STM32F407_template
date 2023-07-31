@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2023 ¸ĞÎªÖÇÄÜ¿Æ¼¼(¼ÃÄÏ)
+ï»¿/*
+ * Copyright (c) 2023 æ„Ÿä¸ºæ™ºèƒ½ç§‘æŠ€(æµå—)
  *
  * This software is licensed under terms that can be found in the LICENSE file
  * in the root directory of this software component.
@@ -32,26 +32,26 @@ int8_t sw_i2c_read(sw_i2c_interface_t *i2c_interface, uint8_t dev_addr, uint8_t 
 	uint8_t i;
 	uint8_t ack_bit;
 
-	/* ÆğÊ¼Î» */
+	/* èµ·å§‹ä½ */
 	sw_i2c_hal_start(i2c_interface);
 
-	/* µØÖ·+¶ÁĞ´Î» */
+	/* åœ°å€+è¯»å†™ä½ */
 	ack_bit = sw_i2c_hal_write_byte(i2c_interface, dev_addr | I2C_READ);
 	if (ack_bit) {
-		/* ´ÓÉè±¸Ã»ÓĞ»Ø¸´ACK,Ö±½ÓÍË³ö */
+		/* ä»è®¾å¤‡æ²¡æœ‰å›å¤ACK,ç›´æ¥é€€å‡º */
 		sw_i2c_hal_stop(i2c_interface);
 		return 1;
 	}
 
-	/* Á¬Ğø¶ÁÈ¡N-1¸öÊı¾İ ¸øACK */
+	/* è¿ç»­è¯»å–N-1ä¸ªæ•°æ® ç»™ACK */
 	for (i = 0; i < data_length - 1; ++i) {
 		data[i] = sw_i2c_hal_read_byte(i2c_interface, ACK);
 	}
 
-	/* ×îºóÒ»¸öÊı¾İ¸ø NACK */
+	/* æœ€åä¸€ä¸ªæ•°æ®ç»™ NACK */
 	data[i] = sw_i2c_hal_read_byte(i2c_interface, NACK);
 
-	/* Í£Ö¹Î» */
+	/* åœæ­¢ä½ */
 	sw_i2c_hal_stop(i2c_interface);
 	return 0;
 }
@@ -62,23 +62,23 @@ int8_t sw_i2c_write(sw_i2c_interface_t *i2c_interface, uint8_t dev_addr, const u
 	uint8_t i;
 	uint8_t ack_bit;
 
-	/* ÆğÊ¼Î» */
+	/* èµ·å§‹ä½ */
 	sw_i2c_hal_start(i2c_interface);
 
-	/* µØÖ·+¶ÁĞ´Î» */
+	/* åœ°å€+è¯»å†™ä½ */
 	ack_bit = sw_i2c_hal_write_byte(i2c_interface, dev_addr | I2C_WRITE);
 	if (ack_bit) {
-		/* ´ÓÉè±¸Ã»ÓĞ»Ø¸´ACK,Ö±½ÓÍË³ö */
+		/* ä»è®¾å¤‡æ²¡æœ‰å›å¤ACK,ç›´æ¥é€€å‡º */
 		sw_i2c_hal_stop(i2c_interface);
 		return 1;
 	}
 
-	/* Á¬ĞøĞ´ÈëN¸öÊı¾İ, Ã¿´Î¶ÁÈ¡1 bitµÄ ACK */
+	/* è¿ç»­å†™å…¥Nä¸ªæ•°æ®, æ¯æ¬¡è¯»å–1 bitçš„ ACK */
 	for (i = 0; i < data_length; ++i) {
 		 ack_bit = sw_i2c_hal_write_byte(i2c_interface, data[i]);
 	}
 
-	/* Í£Ö¹Î» */
+	/* åœæ­¢ä½ */
 	sw_i2c_hal_stop(i2c_interface);
 	return 0;
 }
@@ -136,7 +136,7 @@ int8_t sw_i2c_mem_write(sw_i2c_interface_t *i2c_interface, uint8_t dev_addr, uin
 
 
 /***************************
- * »ùµA²Ù×÷³éÏó²ã
+ * åŸºç¤æ“ä½œæŠ½è±¡å±‚
  **************************/
 
 /**
@@ -163,7 +163,7 @@ static void sw_i2c_hal_stop(sw_i2c_interface_t *i2c_interface)
 }
 
 /**
- * @brief Êä³ö sda µçÆ½,È»ºó scl Êä³öÒ»¸öÊ±ÖÓ
+ * @brief è¾“å‡º sda ç”µå¹³,ç„¶å scl è¾“å‡ºä¸€ä¸ªæ—¶é’Ÿ
  * @param i2c_interface
  * @param bit bit level to send, 0:LOW, 1:HIGH
  */
@@ -175,9 +175,9 @@ static void sw_i2c_hal_write_bit(sw_i2c_interface_t *i2c_interface, uint8_t bit)
 }
 
 /**
- * @brief ¶Á sda µçÆ½Öµ,È»ºó scl Êä³öÒ»¸öÊ±ÖÓ
+ * @brief è¯» sda ç”µå¹³å€¼,ç„¶å scl è¾“å‡ºä¸€ä¸ªæ—¶é’Ÿ
  * @param i2c_interface
- * @return ·µ»Ø SDA µçÆ½Öµ, 0:LOW, 1:HIGH
+ * @return è¿”å› SDA ç”µå¹³å€¼, 0:LOW, 1:HIGH
  */
 static uint8_t sw_i2c_hal_read_bit(sw_i2c_interface_t *i2c_interface)
 {
@@ -190,10 +190,10 @@ static uint8_t sw_i2c_hal_read_bit(sw_i2c_interface_t *i2c_interface)
 }
 
 /**
- * @brief ÏòIICÊä³öÒ»¸ö×Ö½Ú
+ * @brief å‘IICè¾“å‡ºä¸€ä¸ªå­—èŠ‚
  * @param i2c_interface
  * @param byte
- * @return ´ÓÉè±¸·´À¡µÄ ACK µçÆ½Öµ
+ * @return ä»è®¾å¤‡åé¦ˆçš„ ACK ç”µå¹³å€¼
  */
 static uint8_t sw_i2c_hal_write_byte(sw_i2c_interface_t *i2c_interface, uint8_t byte)
 {
@@ -209,10 +209,10 @@ static uint8_t sw_i2c_hal_write_byte(sw_i2c_interface_t *i2c_interface, uint8_t 
 }
 
 /**
- * @brief ´ÓIIC×ÜÏßÉÏ¶ÁÈ¡Ò»¸ö×Ö½Ú
+ * @brief ä»IICæ€»çº¿ä¸Šè¯»å–ä¸€ä¸ªå­—èŠ‚
  * @param i2c_interface
- * @param ack Ïò´ÓÉè±¸·´À¡ ACK »òÕß NACK
- * @return ¶ÁÈ¡µ½µÄ×Ö½Ú
+ * @param ack å‘ä»è®¾å¤‡åé¦ˆ ACK æˆ–è€… NACK
+ * @return è¯»å–åˆ°çš„å­—èŠ‚
  */
 static uint8_t sw_i2c_hal_read_byte(sw_i2c_interface_t *i2c_interface, uint8_t ack)
 {

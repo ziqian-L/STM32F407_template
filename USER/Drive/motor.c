@@ -1,15 +1,15 @@
-#include "motor.h"
+ï»¿#include "motor.h"
 
 #define PWM_MIN -7000
 #define PWM_MAX 7000
 
 void Motor_drive_Init(void)
 {
-    //GPIOAÊ±ÖÓ
+    //GPIOAæ—¶é’Ÿ
     RCC->AHB1ENR |= RCC_AHB1ENR_GPIOGEN;
     
-	/******************³õÊ¼»¯Õý·´×ªGPIOÊä³ö******************/
-	//PG5¡¢PG6¡¢PG7¡¢PG8Êä³ö¡¢ÍìÍÆ¡¢100MHz¡¢¸¡¿Õ
+	/******************åˆå§‹åŒ–æ­£åè½¬GPIOè¾“å‡º******************/
+	//PG5ã€PG6ã€PG7ã€PG8è¾“å‡ºã€æŒ½æŽ¨ã€100MHzã€æµ®ç©º
     GPIOG->MODER    |= (GPIO_MODER_MODER5_0 | GPIO_MODER_MODER6_0 | GPIO_MODER_MODER7_0 | GPIO_MODER_MODER8_0);
     GPIOG->OTYPER   |= 0x00;
     GPIOG->OSPEEDR  |= (GPIO_OSPEEDER_OSPEEDR5 | GPIO_OSPEEDER_OSPEEDR6 | GPIO_OSPEEDER_OSPEEDR7 | GPIO_OSPEEDER_OSPEEDR8);
@@ -17,55 +17,55 @@ void Motor_drive_Init(void)
 }
 
 /*****
- * Èë¿Ú²ÎÊý£º
- *  PSC£ºÔ¤·ÖÆµÏµÊý
- *  ARR£º×Ô¶¯ÖØ×°ÔØÖµ
+ * å…¥å£å‚æ•°ï¼š
+ *  PSCï¼šé¢„åˆ†é¢‘ç³»æ•°
+ *  ARRï¼šè‡ªåŠ¨é‡è£…è½½å€¼
 *****/
 void TIM8_PWM_Init(uint16_t PSC,uint16_t ARR)
 {
-    //GPIOCÊ±ÖÓ¡¢TIM8Ê±ÖÓ
+    //GPIOCæ—¶é’Ÿã€TIM8æ—¶é’Ÿ
     RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN;
     RCC->APB2ENR |= RCC_APB2ENR_TIM8EN;
 
-    //GPIO³õÊ¼»¯
-    //¸´ÓÃÊä³ö¡¢ÍìÍÆ¡¢100MHz¡¢ÏÂÀ­
+    //GPIOåˆå§‹åŒ–
+    //å¤ç”¨è¾“å‡ºã€æŒ½æŽ¨ã€100MHzã€ä¸‹æ‹‰
     GPIOC->MODER    |= GPIO_MODER_MODER6_1 | GPIO_MODER_MODER7_1;
     GPIOC->OTYPER   |= 0x00;
     GPIOC->OSPEEDR  |= GPIO_OSPEEDER_OSPEEDR6 | GPIO_OSPEEDER_OSPEEDR7;
     GPIOC->PUPDR    |= GPIO_PUPDR_PUPDR6_1 | GPIO_PUPDR_PUPDR6_1;
 
-    //GPIO¸´ÓÃ
-    //PC6¡¢PC7¸´ÓÃÎªTIM8
+    //GPIOå¤ç”¨
+    //PC6ã€PC7å¤ç”¨ä¸ºTIM8
 	GPIO_PinAFConfig(GPIOC,GPIO_PinSource6,GPIO_AF_TIM8);
 	GPIO_PinAFConfig(GPIOC,GPIO_PinSource7,GPIO_AF_TIM8);
 
-    //Ê±»ùµ¥Ôª³õÊ¼»¯
-	//ÏòÉÏ¼ÆÊý¡¢²»·Ö¸îÊ±ÖÓ¡¢Ô¤·ÖÆµÏµÊý¡¢×Ô¶¯ÖØ×°ÔØÖµ
+    //æ—¶åŸºå•å…ƒåˆå§‹åŒ–
+	//å‘ä¸Šè®¡æ•°ã€ä¸åˆ†å‰²æ—¶é’Ÿã€é¢„åˆ†é¢‘ç³»æ•°ã€è‡ªåŠ¨é‡è£…è½½å€¼
     TIM8->CR1 |= 0<<4;
     TIM8->CR1 |= 0<<8;
     TIM8->PSC  = PSC;
     TIM8->ARR  = ARR;
     
-    //CH1¡¢CH2Êä³ö±È½Ï³õÊ¼»¯
-    //CH1¡¢CH2ÅäÖÃÎªPWM1Ä£Ê½£¬¿ªÆôÊä³ö¡¢¸ßµçÆ½ÓÐÐ§
+    //CH1ã€CH2è¾“å‡ºæ¯”è¾ƒåˆå§‹åŒ–
+    //CH1ã€CH2é…ç½®ä¸ºPWM1æ¨¡å¼ï¼Œå¼€å¯è¾“å‡ºã€é«˜ç”µå¹³æœ‰æ•ˆ
     TIM8->CCMR1 |= (TIM_CCMR1_OC1M_2 | TIM_CCMR1_OC1M_1);
     TIM8->CCMR1 |= (TIM_CCMR1_OC2M_2 | TIM_CCMR1_OC2M_1);
 
     TIM8->CCER  |= (TIM_CCER_CC1E | 0x00 | TIM_CCER_CC2E | 0x00);
 
-    //Ê¹ÄÜÔ¤×°ÔØÖµ¼Ä´æÆ÷
+    //ä½¿èƒ½é¢„è£…è½½å€¼å¯„å­˜å™¨
     TIM8->CCMR1 |= TIM_CCMR1_OC1PE;
     TIM8->CCMR1 |= TIM_CCMR1_OC2PE;
-    //Ê¹ÄÜ×Ô¶¯ÖØ×°ÔØµÄÔ¤×°ÔØ¼Ä´æÆ÷ÔÊÐíÎ»
+    //ä½¿èƒ½è‡ªåŠ¨é‡è£…è½½çš„é¢„è£…è½½å¯„å­˜å™¨å…è®¸ä½
     TIM8->CR1 |= 1<<7;
-	//¸ß¼¶¶¨Ê±Æ÷Ö÷Êä³öÊ¹ÄÜ
+	//é«˜çº§å®šæ—¶å™¨ä¸»è¾“å‡ºä½¿èƒ½
 	TIM_CtrlPWMOutputs(TIM8,ENABLE);
-    //Ê¹ÄÜ¶¨Ê±Æ÷
+    //ä½¿èƒ½å®šæ—¶å™¨
     TIM_Cmd(TIM8,ENABLE);
 }
 
 /**********
- * ÏÞ·ùº¯Êý
+ * é™å¹…å‡½æ•°
 **********/
 void PWM_Limit(int32_t *motorA,int32_t *motorB)
 {
@@ -77,7 +77,7 @@ void PWM_Limit(int32_t *motorA,int32_t *motorB)
 }
 
 /**********
- * ¾ø¶ÔÖµº¯Êý
+ * ç»å¯¹å€¼å‡½æ•°
 **********/
 int32_t my_abs(int32_t p)
 {
@@ -87,20 +87,20 @@ int32_t my_abs(int32_t p)
 }
 
 /**********
- * ¸³Öµº¯Êý
+ * èµ‹å€¼å‡½æ•°
 **********/
 void Load_PWM(int32_t motorA,int32_t motorB)
 {
-    //Õý·´×ª
+    //æ­£åè½¬
     if (motorA > 0) MotorA_IN1 = 0, MotorA_IN2 = 1;
     else            MotorA_IN1 = 1, MotorA_IN2 = 0;
-    //¸³Öµ£¬PWMAÊä³ö
+    //èµ‹å€¼ï¼ŒPWMAè¾“å‡º
     TIM_SetCompare1(TIM8,my_abs(motorA));
 
-    //Õý·´×ª
+    //æ­£åè½¬
     if (motorB > 0) MotorB_IN3 = 1, MotorB_IN4 = 0;
     else            MotorB_IN3 = 0, MotorB_IN4 = 1;
-    //¸³Öµ£¬PWMBÊä³ö
+    //èµ‹å€¼ï¼ŒPWMBè¾“å‡º
     TIM_SetCompare2(TIM8,my_abs(motorB));
 }
 

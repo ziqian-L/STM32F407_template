@@ -1,19 +1,19 @@
-#ifndef __OLED_H
+ï»¿#ifndef __OLED_H
 #define __OLED_H 
 
 #include "sys.h"
 #include "stdlib.h"	
 
 
-//#define Front	/*Õı½ÓÏß·¨----->´óÔ½´´ĞÂSTM32F4XX¿ª·¢°åOLD-TFTÒº¾§ÆÁ½Ó¿Ú*/
+//#define Front	/*æ­£æ¥çº¿æ³•----->å¤§è¶Šåˆ›æ–°STM32F4XXå¼€å‘æ¿OLD-TFTæ¶²æ™¶å±æ¥å£*/
 #define Back
 
 
 /**============================================
 	*============================================
-	*             Front½Ó·¨OLED¶Ë¿Ú							
+	*             Frontæ¥æ³•OLEDç«¯å£							
 	*--------------------------------------------
-	*	 OLED½Ó¿Ú	|  µ¥Æ¬»ú½Ó¿Ú		|	TFTÒº¾§ÆÁ½Ó¿Ú
+	*	 OLEDæ¥å£	|  å•ç‰‡æœºæ¥å£		|	TFTæ¶²æ™¶å±æ¥å£
 	*--------------------------------------------
 	*		GND			|			GND				|				30
 	*--------------------------------------------
@@ -31,9 +31,9 @@
 	*--------------------------------------------
 	*============================================
 	*============================================
-	*             Back½Ó·¨OLED¶Ë¿Ú							
+	*             Backæ¥æ³•OLEDç«¯å£							
 	*--------------------------------------------
-	*	 OLED½Ó¿Ú	|  µ¥Æ¬»ú½Ó¿Ú		|	TFTÒº¾§ÆÁ½Ó¿Ú
+	*	 OLEDæ¥å£	|  å•ç‰‡æœºæ¥å£		|	TFTæ¶²æ™¶å±æ¥å£
 	*--------------------------------------------
 	*		GND			|			GND				|				1
 	*--------------------------------------------
@@ -56,14 +56,14 @@
 
 
 /***********************************************************************
-															Front½ÓÏß·¨
+															Frontæ¥çº¿æ³•
 ***********************************************************************/
 #ifdef  Front 
 
 #define LED_ON GPIO_ResetBits(GPIOC,GPIO_Pin_12)
 #define LED_OFF GPIO_SetBits(GPIOC,GPIO_Pin_12)//PB15 vcc
 
-//-----------------OLED¶Ë¿Ú¶¨Òå---------------- 
+//-----------------OLEDç«¯å£å®šä¹‰---------------- 
 
 #define OLED_SCL_Clr() GPIO_ResetBits(GPIOB,GPIO_Pin_2)	//SCL
 #define OLED_SCL_Set() GPIO_SetBits(GPIOB,GPIO_Pin_2)
@@ -86,14 +86,14 @@
 
 
 /****************************************************************************
-															Back½ÓÏß·¨
+															Backæ¥çº¿æ³•
 *****************************************************************************/
 #ifdef Back
 
 #define LED_ON GPIO_SetBits(GPIOD,GPIO_Pin_10)
 #define LED_OFF GPIO_ResetBits(GPIOD,GPIO_Pin_10)//PD10 vcc
 
-//-----------------OLED¶Ë¿Ú¶¨Òå---------------- 
+//-----------------OLEDç«¯å£å®šä¹‰---------------- 
 
 #define OLED_SCL_Clr() GPIO_ResetBits(GPIOD,GPIO_Pin_8)	//SCL
 #define OLED_SCL_Set() GPIO_SetBits(GPIOD,GPIO_Pin_8)
@@ -115,8 +115,8 @@
 /*------------------------------- endif ------------------------------------*/
 
 
-#define OLED_CMD  0	//Ğ´ÃüÁî
-#define OLED_DATA 1	//Ğ´Êı¾İ
+#define OLED_CMD  0	//å†™å‘½ä»¤
+#define OLED_DATA 1	//å†™æ•°æ®
 
 void OLED_ClearPoint(u8 x,u8 y);
 void OLED_ColorTurn(u8 i);
@@ -133,8 +133,8 @@ void OLED_ShowChar(u8 x,u8 y,u8 chr,u8 size1,u8 mode);
 void OLED_ShowChar6x8(u8 x,u8 y,u8 chr,u8 mode);
 void OLED_ShowString(u8 x,u8 y,char *chr,u8 size1,u8 mode);
 void OLED_ShowNum(u8 x,u8 y,u32 num,u8 len,u8 size1,u8 mode);
-void OLED_ShowSNum(u8 x,u8 y,int num,u8 len,u8 size1,u8 mode);//Ìí¼ÓÏÔÊ¾¸ºÊı¹¦ÄÜ
-void OLED_ShowFNum(u8 x,u8 y,float num,u8 len,u8 size1,u8 mode);//ÏÔÊ¾´øÒ»Î»Ğ¡ÊıµÄÊı×Ö
+void OLED_ShowSNum(u8 x,u8 y,int num,u8 len,u8 size1,u8 mode);//æ·»åŠ æ˜¾ç¤ºè´Ÿæ•°åŠŸèƒ½
+void OLED_ShowFNum(u8 x,u8 y,float num,u8 len,u8 size1,u8 mode);//æ˜¾ç¤ºå¸¦ä¸€ä½å°æ•°çš„æ•°å­—
 void OLED_ShowChinese(u8 x,u8 y,u8 num,u8 size1,u8 mode);
 void OLED_ScrollDisplay(u8 num,u8 space,u8 mode);
 void OLED_ShowPicture(u8 x,u8 y,u8 sizex,u8 sizey,u8 BMP[],u8 mode);

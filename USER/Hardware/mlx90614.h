@@ -1,4 +1,4 @@
-#ifndef __MLX90614_H
+ï»¿#ifndef __MLX90614_H
 #define __MLX90614_H
 
 #include "sys.h"
@@ -11,7 +11,7 @@ float Read_Temperature(uint8_t address);
 
 #define IIC_SCL    PEout(15) //SCL
 #define IIC_SDA    PEout(14) //SDA	 
-#define READ_SDA   PEin(14)  //ÊäÈëSDA 
+#define READ_SDA   PEin(14)  //è¾“å…¥SDA 
 
 void IIC_Init(void);
 
