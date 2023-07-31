@@ -69,9 +69,9 @@ void PID_Init(void)
 	PID_Servos_Top.Kd = 0.026;
 	//底舵机PID控制
 	PID_Servos_End.SetPoint = 80;
-	PID_Servos_End.Kp = 0;//0.065;
-	PID_Servos_End.Ki = 0;//0.0;
-	PID_Servos_End.Kd = 0;//0.015;
+	PID_Servos_End.Kp = 0.065;
+	PID_Servos_End.Ki = 0.0;
+	PID_Servos_End.Kd = 0.015;
 }
 void PID_Release(void)
 {
