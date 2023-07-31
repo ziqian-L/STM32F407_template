@@ -18,8 +18,10 @@ extern short aacx,aacy,aacz;    //加速度
 extern int32_t Left_Wheel_PWM,Right_Wheel_PWM;
 //巡线(OpenMV巡线或灰度巡线PID计算结果)
 extern float LinePatrol_Control;
-//物体追踪得到的舵机角度
+//物体追踪得到的舵机角度变化量
 extern float Top_Track_Angle,End_Track_Angle;
+//上一次的角度
+extern float Last_Top_Track_Angle,Last_End_Track_Angle;
 
 void TIM9_Timed_Interrupt(uint32_t PSC,uint32_t ARR);
 void Mode_Select(uint8_t mode,double speed);

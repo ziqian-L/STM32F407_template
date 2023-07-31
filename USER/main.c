@@ -24,11 +24,11 @@
  *      编码器：TIM4_CH1(PB6)、TIM4_CH2(PB7)
  *      PWM输出：TIM8_CH2(PC7)
  *      正反转：PG8、PG6
- * 蜂鸣器：PE10
+ * 蜂鸣器：PG1
  * OLED：Back接法
  * 舵机/二维云台：
- * 		舵机1：TIM12_CH1(PB14)
- * 		舵机2：TIM12_CH2(PB15)
+ * 		顶舵机：TIM12_CH1(PB14)
+ * 		底舵机：TIM12_CH2(PB15)
  * 超声波：PC12(UART5_TX)、PD2(UART5_RX)
  * 感为8路灰度：带5V容忍的PF0(SDA)、PF1(SCL)
  * 蓝牙/2.4G：PA2(USART2_TX)、PA3(USART2_RX)
@@ -84,7 +84,11 @@ int main(void)
 //		OLED_ShowNum(64,16,KEY,2,16,1);
 //		OLED_ShowFNum(0,0,Left_Wheel_speed,5,16,1);
 //		OLED_ShowFNum(64,0,Right_Wheel_speed,5,16,1);
-//		OLED_Refresh();
+		OLED_ShowSNum(0,32,Object_Center_X,4,16,1);
+		OLED_ShowSNum(64,32,Object_Center_Y,4,16,1);
+		OLED_ShowFloat(0,48,Last_Top_Track_Angle,7,16,1);
+		OLED_ShowFloat(64,48,Last_End_Track_Angle,7,16,1);
+		OLED_Refresh();
 //		//LED交替闪烁
 //		if(status==0)
 //		{

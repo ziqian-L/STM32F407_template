@@ -62,16 +62,16 @@ void PID_Init(void)
 	PID_LinePatrol.Kp = 0.0;
 	PID_LinePatrol.Ki = 0.0;
 	PID_LinePatrol.Kd = 0.0;
-	//舵机1PID控制
-	PID_Servos1.SetPoint = 90;
-	PID_Servos1.Kp = 0.0;
-	PID_Servos1.Ki = 0.0;
-	PID_Servos1.Kd = 0.0;
-	//舵机2PID控制
-	PID_Servos2.SetPoint = 90;
-	PID_Servos2.Kp = 0.0;
-	PID_Servos2.Ki = 0.0;
-	PID_Servos2.Kd = 0.0;
+	//顶舵机PID控制
+	PID_Servos_Top.SetPoint = 60;
+	PID_Servos_Top.Kp = 0.05;
+	PID_Servos_Top.Ki = 0.0;
+	PID_Servos_Top.Kd = 0.026;
+	//底舵机PID控制
+	PID_Servos_End.SetPoint = 80;
+	PID_Servos_End.Kp = 0;//0.065;
+	PID_Servos_End.Ki = 0;//0.0;
+	PID_Servos_End.Kd = 0;//0.015;
 }
 void PID_Release(void)
 {

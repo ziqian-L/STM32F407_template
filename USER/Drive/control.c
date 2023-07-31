@@ -20,8 +20,8 @@
 /********************************************************************
  * 控制均在中断里完成，使用TIM9作为定时中断
 ********************************************************************/
-//PID控制，左电机PID、右电机PID、巡线PID、舵机1PID、舵机2PID
-PID_TypeDef PID_Left,PID_Right,PID_LinePatrol,PID_Servos1,PID_Servos2;
+//PID控制，左电机PID、右电机PID、巡线PID、顶舵机PID、底舵机PID
+PID_TypeDef PID_Left,PID_Right,PID_LinePatrol,PID_Servos_Top,PID_Servos_End;
 
 /*****************数据采集*****************/
 //通过编码器获取的速度
@@ -38,9 +38,10 @@ short aacx,aacy,aacz;		//加速度
 int32_t Left_Wheel_PWM,Right_Wheel_PWM;
 //巡线(OpenMV巡线或灰度巡线PID计算结果)
 float LinePatrol_Control;
-//物体追踪得到的舵机角度
+//物体追踪得到的舵机角度变化量
 float Top_Track_Angle,End_Track_Angle;
-
+//上一次的角度
+float Last_Top_Track_Angle=90,Last_End_Track_Angle=90;
 /*****
  * 入口参数：
  *  PSC：预分频系数
@@ -80,8 +81,14 @@ void TIM9_Timed_Interrupt(uint32_t PSC,uint32_t ARR)
 *****/
 void TIM1_BRK_TIM9_IRQHandler(void)
 {
+	static uint8_t Time_Interval = 0;
     if (TIM_GetITStatus(TIM9,TIM_IT_Update) != RESET)
     {	
+		/**********************循迹控制*********************/
+		/*灰度循迹控制*/
+		LinePatrol_Control = GraySensor_LinePatrol();		
+		/*OpenMV循迹控制*/
+		
 		/*********************编码器控速*********************/
 		/*1.定时读取编码器、MPU6050的值*/
         Left_Wheel_speed = Read_Speed(3);
@@ -94,17 +101,27 @@ void TIM1_BRK_TIM9_IRQHandler(void)
         PWM_Limit(&Left_Wheel_PWM,&Right_Wheel_PWM);
         Load_PWM(Left_Wheel_PWM,Right_Wheel_PWM);
 		/**********************云台追踪*********************/
-		/*1.将获取到的物体的X、Y坐标进行PID解算*/
-		//X坐标用于控制底部的舵机
-		Top_Track_Angle = Incremental_PID_Contorl(&PID_Servos1,Object_Center_X);
-		//Y坐标用于控制顶部的舵机
-		End_Track_Angle = Incremental_PID_Contorl(&PID_Servos2,Object_Center_Y);
-		/*2.角度输出*/
-		gimbal_angle(Top_Track_Angle,End_Track_Angle);
+		/*******************50ms控制一次******************/
+		Time_Interval++;
+		if(Time_Interval==10)
+		{
+			Time_Interval = 0;
+			/*1.将获取到的物体的X、Y坐标进行PID解算*/
+			//Y坐标用于控制顶部的舵机
+			Top_Track_Angle = Incremental_PID_Contorl(&PID_Servos_Top,Object_Center_Y);
+			//X坐标用于控制底部的舵机
+			End_Track_Angle = Incremental_PID_Contorl(&PID_Servos_End,Object_Center_X);
+			/*2.角度输出*/
+			gimbal_angle(Last_Top_Track_Angle + Top_Track_Angle,Last_End_Track_Angle+End_Track_Angle);
+			Last_Top_Track_Angle = Last_Top_Track_Angle + Top_Track_Angle;
+			Last_End_Track_Angle = Last_End_Track_Angle + End_Track_Angle;
+			/*3.处理数据*/
+			Top_Track_Angle=0;
+			End_Track_Angle=0;
+		}
     }
     TIM_ClearFlag(TIM9,TIM_IT_Update);
-	GraySensor_LinePatrol();
-	OLED_ShowFloat(0,16,Ultrasound_Read(),6,16,1);
+//	OLED_ShowFloat(0,16,Ultrasound_Read(),6,16,1);
 }
 
 

@@ -1,4 +1,4 @@
-﻿#ifndef __SERVOS_H
+#ifndef __SERVOS_H
 #define __SERVOS_H
 
 #include "sys.h"
@@ -18,7 +18,7 @@ typedef struct{
 void Servos_Init(void);
 void servos_angle_limit(Server_Typedef* servos,float *angle);
 void servos_angle(Server_Typedef* servos,TIM_TypeDef* TIMx,float angle);
-void Servos1_Angle(float angle);
-void Servos2_Angle(float angle);
-void gimbal_angle(float Server1_angle,float Server2_angle);
+void Server_Top_Angle(float angle);
+void Server_End_Angle(float angle);
+void gimbal_angle(float Server_Top_Angle,float Server_End_Angle);
 #endif

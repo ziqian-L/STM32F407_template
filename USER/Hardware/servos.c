@@ -1,33 +1,33 @@
-﻿#include "servos.h"
+#include "servos.h"
 
 /****************舵机参数初始化****************/
 /*******针对不同的舵机配置不同的PWM输出*******/
 /**********
- * 舵机1角度：		-90     -45      0       45      90       
- * 自动重装载值：	530   1013.75  1497.5  1981.25  2465
+ * 顶舵机角度：		-90     -45      0       45      90       
+ * 自动重装载值：
 **********/
-Server_Typedef Server1 =
+Server_Typedef Server_Top =
 {
-	.TIM_CH=1,			//定时器通道(TIM12_CH1(PB14))
-	.PWM_Limit_Min=350,	//舵机最小PWM值
-	.PWM_Limit_Max=2679,//舵机最大PWM值
-	.PWM_Angle_Min=590,	//舵机0度PWM值
-	.PWM_Angle_Max=2530,//舵机180/270度时PWM值
-	.Angle=180,			//舵机标准角度范围,180/270
-	.Angle_MIN=0,		//限幅最小角度值
-	.Angle_MAX=180		//限幅最大角度值
-};
-/**********
- * 舵机2角度：		-90     -45      0       45      90       
- * 自动重装载值：	530   1013.75  1497.5  1981.25  2465
-**********/
-Server_Typedef Server2 =
-{
-	.TIM_CH=2,			//定时器通道(TIM12_CH2(PB15))
+	.TIM_CH=1,			//定时器通道(TIM12_CH2(PB15))
 	.PWM_Limit_Min=341,	//舵机最小PWM值
 	.PWM_Limit_Max=2678,//舵机最大PWM值
 	.PWM_Angle_Min=580,	//舵机0度PWM值
 	.PWM_Angle_Max=2500,//舵机180/270度时PWM值
+	.Angle=180,			//舵机标准角度范围,180/270
+	.Angle_MIN=50,		//限幅最小角度值
+	.Angle_MAX=130		//限幅最大角度值
+};
+/**********
+ * 底舵机角度：		-90     -45      0       45      90       
+ * 自动重装载值：
+**********/
+Server_Typedef Server_End =
+{
+	.TIM_CH=2,			//定时器通道(TIM12_CH1(PB14))
+	.PWM_Limit_Min=350,	//舵机最小PWM值
+	.PWM_Limit_Max=2679,//舵机最大PWM值
+	.PWM_Angle_Min=590,	//舵机0度PWM值
+	.PWM_Angle_Max=2530,//舵机180/270度时PWM值
 	.Angle=180,			//舵机标准角度范围,180/270
 	.Angle_MIN=0,		//限幅最小角度值
 	.Angle_MAX=180		//限幅最大角度值
@@ -94,27 +94,27 @@ void servos_angle(Server_Typedef* servos,TIM_TypeDef* TIMx,float angle)
 }
 
 /**********
- * 舵机1角度修改
+ * 舵机角度修改
 **********/
-void Servos1_Angle(float angle)
+void Server_Top_Angle(float angle)
 {
-	servos_angle(&Server1,TIM12,angle);
+	servos_angle(&Server_Top,TIM12,angle);
 }
 
 /**********
  * 舵机2角度修改
 **********/
-void Servos2_Angle(float angle)
+void Server_End_Angle(float angle)
 {
-	servos_angle(&Server2,TIM12,angle);
+	servos_angle(&Server_End,TIM12,angle);
 }
 
 /**********
  * 二维云台角度修改
 **********/
-void gimbal_angle(float Server1_angle,float Server2_angle)
+void gimbal_angle(float Top_Angle,float End_Angle)
 {
-	Servos1_Angle(Server1_angle);
-	Servos2_Angle(Server2_angle);
+	Server_Top_Angle(Top_Angle);
+	Server_End_Angle(End_Angle);
 }
 
